@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备开放共享月报（校级）</title>
+    <style>
+        /* 页面基础设置 */
+        @page { size: A4; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "PingFang SC", "Microsoft YaHei", "SimSun", Arial, sans-serif; line-height: 1.6; color: #333; font-size: 14px; }
+        .page { page-break-after: always; min-height: 100vh; padding: 2cm; position: relative; }
+
+        /* 封面页 - 固定A4高度，深蓝色背景 */
+        .cover-page { height: 297mm; padding: 20mm; background: #0a0f1a; color: #fff; text-align: center; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden; }
+        .cover-header { position: relative; z-index: 2; width: 100%; text-align: left; margin-bottom: 0; padding-top: 20px; padding-left: 2.5cm; }
+        .brand-section { padding: 25px 30px; text-align: left; }
+        .brand-name { font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.9); letter-spacing: 2px; margin-bottom: 8px; }
+        .brand-english { font-size: 16px; font-weight: 300; color: rgba(255, 255, 255, 0.6); letter-spacing: 3px; font-family: "Arial", sans-serif; }
+        .cover-main { position: relative; z-index: 2; margin: 0; padding: 2.5cm; width: 100%; text-align: center; height: 50vh; }
+        .title-section { text-align: center; max-width: 800px; margin: 0 auto 40px auto; padding-top: 10vh; }
+        .cover-title { font-size: 72px; font-weight: 800; margin-bottom: 20px; letter-spacing: 12px; color: #ffffff; position: relative; white-space: nowrap; }
+        .cover-title::after { content: ''; position: absolute; bottom: -18px; left: 0; right: 0; margin: 0 auto; width: 120px; height: 3px; background: #60a5fa; border-radius: 2px; }
+        .cover-subtitle { font-size: 28px; margin-bottom: 24px; font-weight: 300; letter-spacing: 3px; color: rgba(255, 255, 255, 0.8); font-family: "Arial", sans-serif; white-space: nowrap; }
+        .cover-divider { width: 140px; height: 2px; background: #60a5fa; margin-bottom: 28px; border-radius: 1px; }
+        .cover-description { font-size: 20px; font-weight: 300; line-height: 1.6; max-width: 700px; text-align: center; color: rgba(255, 255, 255, 0.65); letter-spacing: 1.2px; margin-bottom: 40px; }
+        .cover-footer { position: relative; z-index: 2; width: 100%; margin-top: 0; padding-bottom: 20px; padding-top: 5vh; }
+        .cover-info { text-align: center; max-width: 800px; margin: 0 auto; padding: 0 2.5cm; }
+        .info-row { text-align: center; margin-bottom: 16px; }
+        .info-row:last-child { margin-bottom: 0; }
+        .info-item { display: inline-block; text-align: center; min-width: 120px; margin: 0 25px; vertical-align: top; }
+        .info-label { color: rgba(255, 255, 255, 0.6); font-weight: 400; letter-spacing: 1px; font-size: 14px; margin-bottom: 8px; display: block; }
+        .info-value { color: rgba(255, 255, 255, 0.9); font-weight: 500; letter-spacing: 0.5px; font-size: 16px; }
+
+        /* 目录页 */
+        .toc-page { background: #ffffff; padding: 1.5cm 2cm; height: 100vh; text-align: center; page-break-after: always; }
+        .toc-title { font-size: 22px; font-weight: 700; color: #1e1b4b; margin-bottom: 20px; }
+        .toc-list { max-width: 480px; margin: 0 auto; text-align: left; padding-top: 10px; }
+        .toc-item { margin-bottom: 18px; display: block; text-align: left; padding: 8px 0; border-bottom: 1px solid #f1f5f9; transition: all 0.2s ease; }
+        .toc-item:hover { background: #f8fafc; padding-left: 10px; border-left: 3px solid #4338ca; }
+        .toc-number { display: inline-block; width: 35px; font-weight: 600; color: #4338ca; vertical-align: top; font-size: 14px; }
+        .toc-content { display: inline-block; width: 320px; font-size: 14px; color: #374151; font-weight: 500; line-height: 1.4; }
+        .toc-dots { display: none; }
+        .toc-page-number { display: none; }
+
+        /* 内容页 */
+        .content-page { background: white; }
+        .section-title { font-size: 24px; font-weight: bold; color: #1e1b4b; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #4338ca; }
+        .chart-container { background: white; padding: 30px; border-radius: 12px; margin-bottom: 35px; border: 2px solid #e2e8f0; }
+        .chart-title { font-size: 20px; font-weight: 600; color: #1e1b4b; margin-bottom: 25px; text-align: center; padding: 16px 24px; background: #f8fafc; border-radius: 12px; border: 2px solid #e2e8f0; }
+        .sub-chart-title { font-size: 16px; font-weight: 600; color: #1e1b4b; margin: 30px 0 20px 0; padding: 16px 24px; background: #f8fafc; border-left: 4px solid #4338ca; border-radius: 0 12px 12px 0; border: 1px solid #e2e8f0; position: relative; }
+        .sub-chart-title::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #4338ca; border-radius: 0 2px 2px 0; }
+
+        /* 数据表格 */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; }
+        .data-table th { background: #f1f5f9; font-weight: bold; color: #1e1b4b; border: 1px solid #e2e8f0; }
+        .data-table tr:nth-child(even) { background: #f8fafc; }
+        .data-table .total-row { background-color: #1e40af !important; color: white; font-weight: bold; }
+        .positive { color: #16a34a; font-weight: 600; }
+        .warning { color: #dc2626; font-weight: 600; }
+        .negative { color: #dc2626; font-weight: 600; }
+        .none { color: #64748b; font-weight: 600; }
+
+        /* 折线图样式 */
+        .trend-chart { position: relative; height: 400px; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; overflow: visible !important; }
+        .chart-legend { margin-bottom: 20px; font-size: 14px; text-align: center; }
+        .legend-item { display: inline-block; margin: 0 10px; vertical-align: middle; }
+        .legend-color { width: 20px; height: 20px; border-radius: 3px; display: inline-block; margin-right: 8px; vertical-align: middle; }
+        .trend-svg { width: 100%; height: 300px; display: block; margin: 0 auto; position: relative; overflow: visible !important; padding: 20px; box-sizing: border-box; }
+        .trend-svg text { font-family: Arial, sans-serif; }
+        .trend-svg line { stroke-linecap: round; }
+        .trend-svg polyline { stroke-linecap: round; stroke-linejoin: round; }
+        .trend-svg circle { }
+        .trend-lines { position: relative; height: 300px; margin: 20px 0; }
+        .trend-line { position: relative; height: 100%; }
+        .trend-point { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: currentColor; border: 2px solid white; border: 1px solid #e2e8f0; cursor: pointer; }
+        .trend-point::after { content: attr(data-month) ': ' attr(data-value) '吨'; position: absolute; top: -30px; left: -20px; background: #1e1b4b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; }
+        .total-line .trend-point { color: #1e40af; }
+        .general-line .trend-point { color: #7c3aed; }
+        .dangerous-line .trend-point { color: #dc2626; }
+        .controlled-line .trend-point { color: #ea580c; }
+
+        /* 饼图样式 - iText兼容版本 */
+        .pie-charts-container { text-align: center; margin: 25px 0; padding: 20px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; }
+        .pie-chart-wrapper { text-align: center; width: 300px; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; display: inline-block; vertical-align: top; margin: 0 10px; }
+        .pie-chart-title { font-size: 14px; font-weight: 600; color: white; margin-bottom: 20px; padding: 8px 12px; background: #4338ca; border-radius: 8px; line-height: 1.3; white-space: nowrap; }
+        .pie-chart { text-align: center; margin: 20px 0; }
+        .pie-legend { margin-top: 20px; text-align: left; }
+        .pie-legend .legend-item { display: block; margin-bottom: 12px; }
+        .pie-legend .legend-color { width: 20px; height: 20px; border-radius: 3px; display: inline-block; margin-right: 12px; vertical-align: middle; }
+        .pie-legend .legend-text { display: inline-block; vertical-align: middle; }
+        .pie-legend .legend-label { font-size: 14px; color: #374151; font-weight: 500; }
+        .pie-legend .legend-value { font-size: 16px; color: #1e1b4b; font-weight: 600; margin-top: 2px; }
+        
+        /* 新增：iText兼容的饼图卡片样式 */
+        .pie-chart-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            width: 360px;        /* 固定宽度避免换行挤压 SVG */
+            margin: 0 auto;
+            background: #ffffff;
+        }
+        .legend-table {
+            width: 100%;
+            border-collapse: collapse; /* iText 友好 */
+            margin-top: 8px;
+        }
+        .legend-table td {
+            padding: 4px 6px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        .legend-label { width: 70%; }
+        .legend-value { text-align: right; white-space: nowrap; }
+        
+
+
+        /* 打印样式 */
+        @media print {
+            .cover-page { height: 297mm !important; padding: 20mm !important; background: #0a0f1a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; page-break-after: always !important; page-break-inside: avoid !important; }
+            .cover-background, .cover-pattern, .cover-gradient { display: none !important; }
+            .toc-page { height: 100vh !important; page-break-after: always !important; }
+            .content-page { page-break-before: always; }
+            .chart-container { page-break-inside: avoid; }
+            
+            /* 折线图打印样式 - 防止跑偏 */
+            .trend-chart { position: relative !important; overflow: visible !important; page-break-inside: avoid !important; }
+            .trend-chart, .trend-svg { overflow: visible !important; }
+            .trend-svg { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; max-width: 100% !important; height: auto !important; }
+            .trend-svg svg { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; max-width: 100% !important; height: auto !important; }
+            .trend-lines { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; }
+            .trend-point { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; }
+        }
+    </style>
+</head>
+<body>
+<!-- 封面页 -->
+<div class="page cover-page">
+        <div class="cover-header">
+            <div class="brand-section">
+                <div class="brand-name">小来实验室</div>
+                <div class="brand-english">LabVision</div>
+            </div>
+        </div>
+        
+        <div class="cover-main">
+            <div class="title-section">
+                <h1 class="cover-title">设备共享月报</h1>
+                <h2 class="cover-subtitle">Equipment Sharing Monthly Report</h2>
+                <div class="cover-divider"></div>
+                <p class="cover-description">北京理工大学设备开放共享月度数据综合分析报告</p>
+            </div>
+        </div>
+        
+        <div class="cover-footer">
+            <div class="cover-info">
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">报告时间</span>
+                        <span class="info-value">2024年12月</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">报告类型</span>
+                        <span class="info-value">校级月度报告</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">生成系统</span>
+                        <span class="info-value">小来实验室</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">生成时间</span>
+                        <span class="info-value">2024年12月31日</span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<!-- 目录页 -->
+<div class="page toc-page">
+        <h1 class="toc-title">目录</h1>
+    <div class="toc-list">
+        <div class="toc-item">
+                <span class="toc-number">1</span>
+                <span class="toc-content">核心指标概览</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">2</span>
+                <span class="toc-content">设备开放共享分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">3</span>
+                <span class="toc-content">设备分布情况分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">4</span>
+                <span class="toc-content">上机预约管理分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">5</span>
+                <span class="toc-content">送样检测管理分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">6</span>
+                <span class="toc-content">设备使用分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">7</span>
+                <span class="toc-content">经济效益分析</span>
+        </div>
+        <div class="toc-item">
+                <span class="toc-number">8</span>
+                <span class="toc-content">设备开放申请分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">9</span>
+                <span class="toc-content">发展规划与建议</span>
+        </div>
+    </div>
+</div>
+
+    <!-- 第1章：核心指标概览 -->
+<div class="page content-page">
+        <h2 class="section-title">1. 核心指标概览</h2>
+        
+        <!-- 核心数据概览 -->
+        <div class="chart-container">
+            <h3 class="chart-title">核心数据概览</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>累计开放设备总数量</td>
+                        <td>1,247台</td>
+                        <td>1,198台</td>
+                        <td class="positive">+49台</td>
+                    </tr>
+                    <tr>
+                        <td>新增开放设备数量</td>
+                        <td>23台</td>
+                        <td>18台</td>
+                        <td class="positive">+5台</td>
+                    </tr>
+                    <tr>
+                        <td>设备总价值</td>
+                        <td>152,310万元</td>
+                        <td>142,310万元</td>
+                        <td class="positive">+10,000万元</td>
+                    </tr>
+                    <tr>
+                        <td>总上机预约次数</td>
+                        <td>8,584次</td>
+                        <td>9,816次</td>
+                        <td class="negative">-768次</td>
+                    </tr>
+                    <tr>
+                        <td>总送样检测次数</td>
+                        <td>10,584次</td>
+                        <td>9,816次</td>
+                        <td class="positive">+768次</td>
+                    </tr>
+                    <tr>
+                        <td>设备每日平均使用时长</td>
+                        <td>8.5小时</td>
+                        <td>8.2小时</td>
+                        <td class="positive">+0.3小时</td>
+                    </tr>
+                    <tr>
+                        <td>设备总使用时长</td>
+                        <td>10,584小时</td>
+                        <td>9,816小时</td>
+                        <td class="positive">+768小时</td>
+                    </tr>
+                    <tr>
+                        <td>设备总收入</td>
+                        <td>156.8万元</td>
+                        <td>142.3万元</td>
+                        <td class="positive">+14.5万元</td>
+                    </tr>
+                    <tr>
+                        <td>覆盖学院数</td>
+                        <td>18个</td>
+                        <td>18个</td>
+                        <td class="positive">0个</td>
+                    </tr>
+                </tbody>
+            </table>
+                </div>
+            </div>
+            
+    <!-- 第2章：设备开放共享分析 -->
+    <div class="page content-page">
+        <h2 class="section-title">2. 设备开放共享分析</h2>
+
+        <!-- 设备开放指标 -->
+        <div class="chart-container">
+            <h3 class="chart-title">设备开放指标</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>设备总数量</td>
+                        <td>1,247台</td>
+                        <td>1,198台</td>
+                        <td class="positive">+49台</td>
+                    </tr>
+                    <tr>
+                        <td>开放设备数量</td>
+                        <td>1,174台</td>
+                        <td>1,126台</td>
+                        <td class="positive">+48台</td>
+                    </tr>
+                    <tr>
+                        <td>设备开放率</td>
+                        <td>93.9%</td>
+                        <td>93.7%</td>
+                        <td class="positive">+0.2%</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            
+        <!-- 设备累计开放数量趋势变化 -->
+        <div class="chart-container">
+            <h3 class="chart-title">设备累计开放数量趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #7c3aed;"></div>
+                        <span>累计开放设备数量</span>
+                </div>
+                </div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">500</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">1000</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">1500</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 开放设备数线 - 平滑曲线 -->
+                    <path d="M 60,200 Q 89,198 118,196 Q 147,193 176,190 Q 205,187 234,184 Q 263,182 292,180 Q 321,178 350,176 Q 379,174 408,172 Q 437,170 466,168 Q 495,166 524,164 Q 553,162 582,160 Q 611,164 640,168 Q 669,170 698,172" 
+                          fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- 开放设备数数据点 -->
+                    <circle cx="60" cy="200" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="196" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="190" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="184" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="180" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="176" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="172" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="168" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="164" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="160" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="164" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="168" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 开放对象分布 -->
+        
+
+    <!-- 第3章：设备分布情况分析 -->
+    <div class="page content-page">
+        <h2 class="section-title">3. 设备分布情况分析</h2>
+        
+        <!-- 各学院设备分布 -->
+        <div class="chart-container">
+            <h3 class="chart-title">各学院设备分布</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>学院名称</th>
+                        <th>设备数量</th>
+                        <th>设备价值（万元）</th>
+                        <th>开放设备数量</th>
+                        <th>设备开放率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学学院</td>
+                        <td>234台</td>
+                        <td>28,450</td>
+                        <td>145台</td>
+                        <td>82.3%</td>
+                    </tr>
+                    <tr>
+                        <td>物理学院</td>
+                        <td>198台</td>
+                        <td>24,680</td>
+                        <td>134台</td>
+                        <td>79.8%</td>
+                    </tr>
+                    <tr>
+                        <td>材料学院</td>
+                        <td>167台</td>
+                        <td>21,340</td>
+                        <td>123台</td>
+                        <td>76.5%</td>
+                    </tr>
+                    <tr>
+                        <td>机械学院</td>
+                        <td>145台</td>
+                        <td>18,920</td>
+                        <td>112台</td>
+                        <td>81.2%</td>
+                    </tr>
+                    <tr>
+                        <td>电子学院</td>
+                        <td>134台</td>
+                        <td>16,780</td>
+                        <td>101台</td>
+                        <td>10.7%</td>
+                    </tr>
+                    <tr>
+                        <td>其他学院</td>
+                        <td>369台</td>
+                        <td>42,240</td>
+                        <td>305台</td>
+                        <td>29.6%</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总计</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>152,310</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>82.3%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+                </div>
+
+        <!-- 按楼宇分布情况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">按楼宇分布情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>楼宇名称</th>
+                        <th>设备数量</th>
+                        <th>设备价值(万元)</th>
+                        <th>开放设备数量</th>
+                        <th>设备开放率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>实验楼A</td>
+                        <td>456台</td>
+                        <td>45,680</td>
+                        <td>36台</td>
+                        <td>82.1%</td>
+                    </tr>
+                    <tr>
+                        <td>实验楼B</td>
+                        <td>391台</td>
+                        <td>38,920</td>
+                        <td>31台</td>
+                        <td>79.8%</td>
+                    </tr>
+                    <tr>
+                        <td>实验楼C</td>
+                        <td>234台</td>
+                        <td>32,450</td>
+                        <td>18台</td>
+                        <td>76.5%</td>
+                    </tr>
+                    <tr>
+                        <td>其他楼宇</td>
+                        <td>166台</td>
+                        <td>35,260</td>
+                        <td>13台</td>
+                        <td>78.9%</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总计</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>152,310</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>82.3%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+        <!-- 设备价格分布 -->
+    <div class="chart-container">
+            <h3 class="chart-title">设备价格分布</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                        <th>价格区间</th>
+                        <th>设备数量</th>
+                        <th>设备价值(万元)</th>
+                        <th>开放设备数量</th>
+                        <th>设备开放率</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                        <td>不到40w</td>
+                        <td>856台</td>
+                        <td>12,840</td>
+                        <td>68台</td>
+                        <td>85.2%</td>
+                </tr>
+                <tr>
+                        <td>40w-200w</td>
+                        <td>234台</td>
+                        <td>18,720</td>
+                        <td>18台</td>
+                        <td>78.5%</td>
+                </tr>
+                <tr>
+                        <td>200w-1000w</td>
+                        <td>89台</td>
+                        <td>31,150</td>
+                        <td>7台</td>
+                        <td>72.3%</td>
+                </tr>
+                <tr>
+                        <td>1000w+</td>
+                        <td>68台</td>
+                        <td>89,600</td>
+                        <td>5台</td>
+                        <td>68.9%</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总计</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>152,310</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>82.3%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- 第4章：上机预约管理分析 -->
+<div class="page content-page">
+        <h2 class="section-title">4. 上机预约管理分析</h2>
+    
+        <!-- 上机预约指标 -->
+    <div class="chart-container">
+            <h3 class="chart-title">上机预约指标</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                        <th>指标名称</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                        <td>总上机预约次数</td>
+                        <td>2,847次</td>
+                        <td>2,634次</td>
+                        <td class="positive">+213次</td>
+                </tr>
+                <tr>
+                        <td>预约总时长</td>
+                        <td>3,456小时</td>
+                        <td>3,198小时</td>
+                        <td class="positive">+258小时</td>
+                </tr>
+                <tr>
+                        <td>预约总人数</td>
+                        <td>1,234人</td>
+                        <td>1,200人</td>
+                        <td class="positive">+34人</td>
+                </tr>
+                <tr>
+                        <td>单台设备平均预约时长</td>
+                        <td>1.2小时</td>
+                        <td>1.1小时</td>
+                        <td class="positive">+0.1小时</td>
+                </tr>
+                <tr>
+                        <td>预约审批通过率</td>
+                        <td>94.2%</td>
+                        <td>93.8%</td>
+                        <td class="positive">+0.4%</td>
+                </tr>
+                <tr>
+                        <td>爽约率</td>
+                        <td>2.5%</td>
+                        <td>2.3%</td>
+                        <td class="negative">+0.2%</td>
+                    </tr>
+                    <tr>
+                        <td>使用超时率</td>
+                        <td>2.5%</td>
+                        <td>2.3%</td>
+                        <td class="negative">+0.2%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+        <!-- 上机预约次数趋势变化 -->
+        <div class="chart-container">
+            <h3 class="chart-title">上机预约次数趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #1e40af;"></div>
+                        <span>上机预约次数</span>
+    </div>
+</div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">4000</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">6000</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 上机预约次数线 - 平滑曲线 -->
+                    <path d="M 60,200 Q 89,198 118,196 Q 147,193 176,190 Q 205,187 234,184 Q 263,182 292,180 Q 321,178 350,176 Q 379,174 408,172 Q 437,170 466,168 Q 495,166 524,164 Q 553,162 582,160 Q 611,164 640,168 Q 669,170 698,172" 
+                          fill="none" stroke="#1e40af" stroke-width="3" stroke-linecap="round"/>
+                    
+                    
+                    <!-- 上机预约次数数据点 -->
+                    <circle cx="60" cy="200" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="196" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="190" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="184" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="180" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="176" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="172" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="168" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="164" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="160" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="164" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="168" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 上机预约使用时长趋势变化 -->
+    <div class="chart-container">
+            <h3 class="chart-title">上机预约使用时长趋势变化</h3>
+        <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0ea5e9;"></div>
+                        <span>上机预约使用时长</span>
+                    </div>
+                </div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">1000</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">3000</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">4000</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 上机预约使用时长线 - 平滑曲线 -->
+                    <path d="M 60,220 Q 89,215 118,210 Q 147,205 176,200 Q 205,195 234,190 Q 263,185 292,180 Q 321,175 350,170 Q 379,165 408,160 Q 437,155 466,150 Q 495,145 524,140 Q 553,135 582,130 Q 611,125 640,120 Q 669,115 698,110" 
+                          fill="none" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- 上机预约使用时长数据点 -->
+                    <circle cx="60" cy="220" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="210" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="200" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="190" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="180" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="170" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="160" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="150" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="160" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="180" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="190" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="200" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 各时段设备预约次数对比(本月) -->
+        <div class="chart-container">
+            <h3 class="chart-title">各时段设备预约次数对比(本月)</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f59e42;"></div>
+                        <span>设备预约次数</span>
+                    </div>
+                </div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                
+                <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">200</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">300</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">400</text>
+
+                    <!-- X轴标签（每2小时一个间隔，共12个，格式为2:00、4:00等） -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">0:00</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2:00</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">4:00</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">6:00</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">8:00</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">10:00</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">12:00</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">14:00</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">16:00</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">18:00</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">20:00</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">22:00</text>
+
+                    <!-- 设备预约次数线 - 平滑曲线（示例数据） -->
+                    <path d="M 60,230 Q 89,220 118,210 Q 147,200 176,180 Q 205,160 234,140 Q 263,120 292,110 Q 321,100 350,110 Q 379,120 408,140 Q 437,160 466,180 Q 495,200 524,210 Q 553,220 582,230 Q 611,240 640,245 Q 669,248 698,250"
+                          fill="none" stroke="#f59e42" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- 设备预约次数数据点（示例数据） -->
+                    <circle cx="60" cy="230" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="210" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="180" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="140" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="110" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="110" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="140" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="180" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="210" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="230" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="245" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="250" r="4" fill="#f59e42" stroke="white" stroke-width="2"/>
+            </svg>
+        </div>
+    </div>
+
+        <!-- 学院对比(本月) -->
+    <div class="chart-container">
+            <h3 class="chart-title">学院对比(本月)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>所属单位</th>
+                        <th>开放设备数量</th>
+                        <th>预约总次数</th>
+                        <th>预约总时长</th>
+                        <th>设备平均预约时长(每日)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学学院</td>
+                        <td>145台</td>
+                        <td>856次</td>
+                        <td>1,234小时</td>
+                        <td>8.5小时</td>
+                    </tr>
+                    <tr>
+                        <td>材料科学与工程学院</td>
+                        <td>123台</td>
+                        <td>734次</td>
+                        <td>1,087小时</td>
+                        <td>8.8小时</td>
+                    </tr>
+                    <tr>
+                        <td>物理学院</td>
+                        <td>134台</td>
+                        <td>698次</td>
+                        <td>987小时</td>
+                        <td>7.4小时</td>
+                    </tr>
+                    <tr>
+                        <td>机械学院</td>
+                        <td>112台</td>
+                        <td>423次</td>
+                        <td>567小时</td>
+                        <td>5.1小时</td>
+                    </tr>
+                    <tr>
+                        <td>电子学院</td>
+                        <td>101台</td>
+                        <td>356次</td>
+                        <td>489小时</td>
+                        <td>4.8小时</td>
+                    </tr>
+                    <tr>
+                        <td>其他学院</td>
+                        <td>305台</td>
+                        <td>678次</td>
+                        <td>892小时</td>
+                        <td>2.9小时</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总计</strong></td>
+                        <td><strong>1,247台</strong></td>
+                        <td><strong>3,745次</strong></td>
+                        <td><strong>5,256小时</strong></td>
+                        <td><strong>4.2小时</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+                </div>
+
+        <!-- 校内校外预约对比(本月) -->
+        <div class="chart-container">
+            <h3 class="chart-title">校内校外对比(本月)</h3>
+            <div class="pie-charts-container">
+                <!-- 校内校外用户预约次数占比(本月) -->
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">预约次数占比(本月)</div>
+                    <div class="pie-chart">
+                        <!-- 预约次数占比 75% / 25% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="75/25 pie">
+                            <!-- 底层整圈：校外用户（紫色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#7c3aed" stroke-width="20"/>
+                          
+                            <!-- 上层弧：校内用户 75%（深蓝色） -->
+                            <polyline fill="none" stroke="#1e40af" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                              " />
+                          
+                            <!-- 中空甜甜圈 -->
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #1e40af;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">校内用户</span>
+                                <span class="legend-value">75%</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #7c3aed;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">校外用户</span>
+                                <span class="legend-value">25%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 预约时长Top5设备(本月) -->
+        <div class="chart-container">
+            <h3 class="chart-title">预约时长Top5设备(本月)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>设备名称</th>
+                        <th>设备负责人</th>
+                        <th>所属单位</th>
+                        <th>预约总时长</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>X射线衍射仪</td>
+                        <td>张教授</td>
+                        <td>材料科学与工程学院</td>
+                        <td>2,856小时</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>扫描电子显微镜</td>
+                        <td>李博士</td>
+                        <td>化学学院</td>
+                        <td>2,634小时</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>原子力显微镜</td>
+                        <td>王研究员</td>
+                        <td>物理学院</td>
+                        <td>2,198小时</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>拉曼光谱仪</td>
+                        <td>陈副教授</td>
+                        <td>化学学院</td>
+                        <td>1,987小时</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>透射电子显微镜</td>
+                        <td>刘教授</td>
+                        <td>材料科学与工程学院</td>
+                        <td>1,756小时</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    <!-- 第5章：送样检测管理分析 -->
+<div class="page content-page">
+        <h2 class="section-title">5. 送样检测管理分析</h2>
+    
+        <!-- 送样检测指标 -->
+    <div class="chart-container">
+            <h3 class="chart-title">送样检测指标</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>总送样检测次数</td>
+                        <td>1,234次</td>
+                        <td>1,156次</td>
+                        <td class="positive">+78次</td>
+                    </tr>
+                    <tr>
+                        <td>检测总时长</td>
+                        <td>7,128小时</td>
+                        <td>6,789小时</td>
+                        <td class="positive">+339小时</td>
+                    </tr>
+                    <tr>
+                        <td>检测平均用时</td>
+                        <td>2天3小时</td>
+                        <td>2天2小时</td>
+                        <td class="negative">+1小时</td>
+                    </tr>
+                    <tr>
+                        <td>预约审批通过率</td>
+                        <td>94.2%</td>
+                        <td>93.8%</td>
+                        <td class="positive">+0.4%</td>
+                    </tr>
+                    <tr>
+                        <td>检测完成率</td>
+                        <td>98.5%</td>
+                        <td>98.2%</td>
+                        <td class="positive">+0.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+                </div>
+
+        <!-- 送样检测次数趋势变化 -->
+        <div class="chart-container">
+            <h3 class="chart-title">送样检测次数趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #7c3aed;"></div>
+                        <span>送样检测次数</span>
+                </div>
+            </div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">4000</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">6000</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 送样检测次数线 - 平滑曲线 -->
+                    <path d="M 60,180 Q 89,178 118,176 Q 147,173 176,170 Q 205,167 234,164 Q 263,162 292,160 Q 321,158 350,156 Q 379,154 408,152 Q 437,150 466,148 Q 495,146 524,144 Q 553,142 582,140 Q 611,144 640,148 Q 669,150 698,152" 
+                          fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- 送样检测次数数据点 -->
+                    <circle cx="60" cy="180" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="176" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="170" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="164" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="160" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="156" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="152" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="148" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="144" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="140" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="144" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="148" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                                 </svg>
+        </div>
+    </div>
+
+         <!-- 学院对比(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">学院对比(本月)</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                         <th>所属单位</th>
+                         <th>开放设备数量</th>
+                         <th>检测总次数</th>
+                         <th>设备平均检测次数(每日)</th>
+                         <th>检测平均用时</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                         <td>化学学院</td>
+                         <td>145台</td>
+                         <td>456次</td>
+                         <td>3.1次</td>
+                         <td>2天1小时</td>
+                </tr>
+                <tr>
+                         <td>材料科学与工程学院</td>
+                         <td>123台</td>
+                         <td>398次</td>
+                         <td>3.2次</td>
+                         <td>2天3小时</td>
+                </tr>
+                <tr>
+                         <td>物理学院</td>
+                         <td>134台</td>
+                         <td>345次</td>
+                         <td>2.6次</td>
+                         <td>1天8小时</td>
+                </tr>
+                <tr>
+                         <td>机械学院</td>
+                         <td>112台</td>
+                         <td>234次</td>
+                         <td>2.1次</td>
+                         <td>3天2小时</td>
+                </tr>
+                <tr>
+                         <td>电子学院</td>
+                         <td>101台</td>
+                         <td>189次</td>
+                         <td>1.9次</td>
+                         <td>2天5小时</td>
+                     </tr>
+                     <tr>
+                         <td>其他学院</td>
+                         <td>305台</td>
+                         <td>567次</td>
+                         <td>1.9次</td>
+                         <td>2天8小时</td>
+                     </tr>
+                     <tr class="total-row">
+                         <td><strong>总计</strong></td>
+                         <td><strong>1,247台</strong></td>
+                         <td><strong>2,189次</strong></td>
+                         <td><strong>1.8次</strong></td>
+                         <td><strong>2天3小时</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+         <!-- 校内校外送样检测对比(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">校内校外对比(本月)</h3>
+             <div class="pie-charts-container">
+                 <!-- 校内校外用户送样检测次数占比(本月) -->
+                 <div class="pie-chart-wrapper">
+                     <div class="pie-chart-title">送样检测次数占比(本月)</div>
+                     <div class="pie-chart">
+                         <!-- 送样检测次数占比 80% / 20% -->
+                         <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="80/20 pie">
+                             <!-- 底层整圈：校外用户（橙色） -->
+                             <circle cx="100" cy="100" r="80" fill="none" stroke="#f59e42" stroke-width="20"/>
+                           
+                             <!-- 上层弧：校内用户 80%（紫色） -->
+                             <polyline fill="none" stroke="#7c3aed" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                               points="
+                                 100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                 169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                 169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                 100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                 30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                 30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                               " />
+                           
+                             <!-- 中空甜甜圈 -->
+                             <circle cx="100" cy="100" r="60" fill="white"/>
+                           </svg>
+                     </div>
+                     <div class="pie-legend">
+                         <div class="legend-item">
+                             <div class="legend-color" style="background: #7c3aed;"></div>
+                             <div class="legend-text">
+                                 <span class="legend-label">校内用户</span>
+                                 <span class="legend-value">80%</span>
+                             </div>
+                         </div>
+                         <div class="legend-item">
+                             <div class="legend-color" style="background: #f59e42;"></div>
+                             <div class="legend-text">
+                                 <span class="legend-label">校外用户</span>
+                                 <span class="legend-value">20%</span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
+
+         <!-- 送样检测次数Top5设备(本月) -->
+         <div class="chart-container">
+             <h3 class="chart-title">送样检测次数Top5设备(本月)</h3>
+             <table class="data-table">
+                 <thead>
+                     <tr>
+                         <th>排名</th>
+                         <th>设备名称</th>
+                         <th>设备负责人</th>
+                         <th>所属单位</th>
+                         <th>完成检测次数</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>1</td>
+                         <td>高效液相色谱仪</td>
+                         <td>赵教授</td>
+                         <td>化学学院</td>
+                         <td>456次</td>
+                     </tr>
+                     <tr>
+                         <td>2</td>
+                         <td>气相色谱质谱联用仪</td>
+                         <td>孙博士</td>
+                         <td>化学学院</td>
+                         <td>398次</td>
+                     </tr>
+                     <tr>
+                         <td>3</td>
+                         <td>紫外分光光度计</td>
+                         <td>周副教授</td>
+                         <td>材料科学与工程学院</td>
+                         <td>345次</td>
+                     </tr>
+                     <tr>
+                         <td>4</td>
+                         <td>红外光谱仪</td>
+                         <td>吴研究员</td>
+                         <td>物理学院</td>
+                         <td>298次</td>
+                     </tr>
+                     <tr>
+                         <td>5</td>
+                         <td>原子吸收分光光度计</td>
+                         <td>郑教授</td>
+                         <td>化学学院</td>
+                         <td>267次</td>
+                     </tr>
+                 </tbody>
+             </table>
+    </div>
+</div>
+
+     <!-- 第6章：设备使用分析 -->
+<div class="page content-page">
+        <h2 class="section-title">6. 设备使用分析</h2>
+    
+        <!-- 设备使用概况 -->
+    <div class="chart-container">
+            <h3 class="chart-title">设备使用概况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>设备总使用时长</td>
+                        <td>10,584小时</td>
+                        <td>9,816小时</td>
+                        <td class="positive">+768小时</td>
+                    </tr>
+                    <tr>
+                        <td>设备每日平均使用时长</td>
+                        <td>8.5小时</td>
+                        <td>8.2小时</td>
+                        <td class="positive">+0.3小时</td>
+                    </tr>
+                    <tr>
+                        <td>40w以上设备每日平均使用时长</td>
+                        <td>10.2小时</td>
+                        <td>9.8小时</td>
+                        <td class="positive">+0.4小时</td>
+                    </tr>
+                    <tr>
+                        <td>40w以上设备闲置率 (当月无人使用)</td>
+                        <td>10.2%</td>
+                        <td>10.7%</td>
+                        <td class="positive">-0.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+        <!-- 设备使用量趋势变化 -->
+    <div class="chart-container">
+            <h3 class="chart-title">设备使用量趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0ea5e9;"></div>
+                        <span>使用总时长(小时)</span>
+                </div>
+            </div>
+                <svg class="trend-svg" viewBox="0 0 800 300">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">4000</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">6000</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 总使用时长线 - 平滑曲线 -->
+                    <path d="M 60,160 Q 89,158 118,156 Q 147,153 176,150 Q 205,147 234,144 Q 263,142 292,140 Q 321,138 350,136 Q 379,134 408,132 Q 437,130 466,128 Q 495,126 524,124 Q 553,122 582,120 Q 611,124 640,128 Q 669,130 698,132" 
+                          fill="none" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- 总使用时长数据点 -->
+                    <circle cx="60" cy="160" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="156" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="150" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="144" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="140" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="136" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="132" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="128" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="124" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="120" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="124" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="128" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                </svg>
+        </div>
+    </div>
+
+        <!-- 设备使用效率分析(本月) -->
+    <div class="chart-container">
+            <h3 class="chart-title">设备使用效率分析(本月)</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                        <th>设备类型</th>
+                        <th>设备数量</th>
+                        <th>平均使用时长(小时/天)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                        <td>不到40w设备</td>
+                        <td>278</td>
+                        <td>8.5</td>
+                </tr>
+                <tr>
+                        <td>40w-200w设备</td>
+                        <td>128</td>
+                        <td>8.2</td>
+                </tr>
+                <tr>
+                        <td>200w-1000w设备</td>
+                        <td>10</td>
+                        <td>7.8</td>
+                </tr>
+                <tr>
+                        <td>1000w+设备</td>
+                        <td>1</td>
+                        <td>6.8</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>平均</strong></td>
+                        <td><strong>10</strong></td>
+                        <td><strong>8.1</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+         <!-- 学院对比(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">学院对比(本月)</h3>
+             <table class="data-table">
+                 <thead>
+                     <tr>
+                         <th>所属单位</th>
+                         <th>开放设备数量</th>
+                         <th>使用总时长</th>
+                         <th>设备平均使用时长(每日)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>化学学院</td>
+                         <td>145台</td>
+                         <td>2,856小时</td>
+                         <td>19.7小时</td>
+                     </tr>
+                     <tr>
+                         <td>材料科学与工程学院</td>
+                         <td>123台</td>
+                         <td>2,634小时</td>
+                         <td>21.4小时</td>
+                     </tr>
+                     <tr>
+                         <td>物理学院</td>
+                         <td>134台</td>
+                         <td>2,198小时</td>
+                         <td>16.4小时</td>
+                     </tr>
+                     <tr>
+                         <td>机械学院</td>
+                         <td>112台</td>
+                         <td>1,567小时</td>
+                         <td>14.0小时</td>
+                     </tr>
+                     <tr>
+                         <td>电子学院</td>
+                         <td>101台</td>
+                         <td>1,234小时</td>
+                         <td>12.2小时</td>
+                     </tr>
+                     <tr>
+                         <td>其他学院</td>
+                         <td>305台</td>
+                         <td>2,987小时</td>
+                         <td>9.8小时</td>
+                     </tr>
+                     <tr class="total-row">
+                         <td><strong>总计</strong></td>
+                         <td><strong>1,247台</strong></td>
+                         <td><strong>13,476小时</strong></td>
+                         <td><strong>10.8小时</strong></td>
+                     </tr>
+                 </tbody>
+             </table>
+    </div>
+
+         <!-- 校内校外对比(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">校内校外对比(本月)</h3>
+             <div class="pie-charts-container">
+                 <!-- 校内校外用户设备使用时长占比 -->
+                 <div class="pie-chart-wrapper">
+                     <div class="pie-chart-title">设备使用时长占比(本月)</div>
+                     <div class="pie-chart">
+                         <!-- 设备使用时长占比 72% / 28% -->
+                         <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="72/28 pie">
+                             <!-- 底层整圈：校外用户（紫色） -->
+                             <circle cx="100" cy="100" r="80" fill="none" stroke="#7c3aed" stroke-width="20"/>
+                           
+                             <!-- 上层弧：校内用户 72%（深蓝色） -->
+                             <polyline fill="none" stroke="#1e40af" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                               points="
+                                 100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                 169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                 169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                 100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                 30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                 30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                               " />
+                           
+                             <!-- 中空甜甜圈 -->
+                             <circle cx="100" cy="100" r="60" fill="white"/>
+                           </svg>
+                     </div>
+                     <div class="pie-legend">
+                         <div class="legend-item">
+                             <div class="legend-color" style="background: #1e40af;"></div>
+                             <div class="legend-text">
+                                 <span class="legend-label">校内用户</span>
+                                 <span class="legend-value">72%</span>
+                             </div>
+                         </div>
+                         <div class="legend-item">
+                             <div class="legend-color" style="background: #7c3aed;"></div>
+                             <div class="legend-text">
+                                 <span class="legend-label">校外用户</span>
+                                 <span class="legend-value">28%</span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+                <!-- 校内校外用户使用时长占比(本月) -->
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">使用时长占比(本月)</div>
+                    <div class="pie-chart">
+                        <!-- 使用时长占比 70% / 30% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="70/30 pie">
+                            <!-- 底层整圈：校外用户（橙色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f59e42" stroke-width="20"/>
+                          
+                            <!-- 上层弧：校内用户 70%（浅蓝色） -->
+                            <polyline fill="none" stroke="#0ea5e9" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                              " />
+                          
+                            <!-- 中空甜甜圈 -->
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #0ea5e9;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">校内用户</span>
+                                <span class="legend-value">70%</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e42;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">校外用户</span>
+                                <span class="legend-value">30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- 使用时长Top5设备(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">使用时长Top5设备(本月)</h3>
+             <table class="data-table">
+                 <thead>
+                     <tr>
+                         <th>排名</th>
+                         <th>设备名称</th>
+                         <th>设备负责人</th>
+                         <th>所属单位</th>
+                         <th>使用总时长</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>1</td>
+                         <td>X射线衍射仪</td>
+                         <td>张教授</td>
+                         <td>材料科学与工程学院</td>
+                         <td>3,456小时</td>
+                     </tr>
+                     <tr>
+                         <td>2</td>
+                         <td>扫描电子显微镜</td>
+                         <td>李博士</td>
+                         <td>化学学院</td>
+                         <td>3,234小时</td>
+                     </tr>
+                     <tr>
+                         <td>3</td>
+                         <td>原子力显微镜</td>
+                         <td>王研究员</td>
+                         <td>物理学院</td>
+                         <td>2,987小时</td>
+                     </tr>
+                     <tr>
+                         <td>4</td>
+                         <td>拉曼光谱仪</td>
+                         <td>陈副教授</td>
+                         <td>化学学院</td>
+                         <td>2,756小时</td>
+                     </tr>
+                     <tr>
+                         <td>5</td>
+                         <td>透射电子显微镜</td>
+                         <td>刘教授</td>
+                         <td>材料科学与工程学院</td>
+                         <td>2,634小时</td>
+                     </tr>
+                 </tbody>
+             </table>
+        </div>
+    </div>
+
+     <!-- 第7章：经济效益分析 -->
+    <div class="page content-page">
+        <h2 class="section-title">7. 经济效益分析</h2>
+        
+        <!-- 经济效益指标 -->
+    <div class="chart-container">
+            <h3 class="chart-title">经济效益指标</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                        <th>收入类型</th>
+                        <th>本月收入</th>
+                        <th>上月收入</th>
+                        <th>变化量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                        <td>上机预约收入</td>
+                        <td>89.6万元</td>
+                        <td>81.2万元</td>
+                        <td class="positive">+8.4万元</td>
+                </tr>
+                <tr>
+                        <td>送样检测收入</td>
+                        <td>67.2万元</td>
+                        <td>61.1万元</td>
+                        <td class="positive">+6.1万元</td>
+                </tr>
+                <tr>
+                        <td>校内收入</td>
+                        <td>98.3万元</td>
+                        <td>89.7万元</td>
+                        <td class="positive">+8.6万元</td>
+                </tr>
+                <tr>
+                        <td>校外收入</td>
+                        <td>58.5万元</td>
+                        <td>52.6万元</td>
+                        <td class="positive">+5.9万元</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总收入</strong></td>
+                        <td><strong>156.8万元</strong></td>
+                        <td><strong>142.3万元</strong></td>
+                        <td><strong>+14.5万元</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+         <!-- 收入趋势变化 -->
+    <div class="chart-container">
+             <h3 class="chart-title">收入趋势变化</h3>
+             <div class="trend-chart">
+                 <div class="chart-legend">
+                     <div class="legend-item">
+                         <div class="legend-color" style="background: #1e40af;"></div>
+                         <span>总收入</span>
+                </div>
+                     <div class="legend-item">
+                         <div class="legend-color" style="background: #7c3aed;"></div>
+                         <span>校内收入</span>
+                </div>
+                     <div class="legend-item">
+                         <div class="legend-color" style="background: #0ea5e9;"></div>
+                         <span>校外收入</span>
+            </div>
+                </div>
+                 <svg class="trend-svg" viewBox="0 0 800 300">
+                <!-- 坐标轴 -->
+                     <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                     <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                     
+                     <!-- Y轴标签 -->
+                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                     <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">50</text>
+                     <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+                     <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">150</text>
+                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">200</text>
+                     
+                     <!-- X轴标签 -->
+                     <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                     <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                     <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                     <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                     <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                     <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                     <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                     <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                     <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                     <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                     <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                     <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                     
+                     <!-- 总收入线 - 平滑曲线 -->
+                     <path d="M 60,180 Q 89,175 118,170 Q 147,165 176,160 Q 205,155 234,150 Q 263,145 292,140 Q 321,135 350,130 Q 379,125 408,120 Q 437,115 466,110 Q 495,105 524,100 Q 553,95 582,90 Q 611,85 640,80 Q 669,75 698,70" 
+                           fill="none" stroke="#1e40af" stroke-width="3" stroke-linecap="round"/>
+                     
+                     <!-- 校内收入线 - 平滑曲线 -->
+                     <path d="M 60,190 Q 89,185 118,180 Q 147,175 176,170 Q 205,165 234,160 Q 263,155 292,150 Q 321,145 350,140 Q 379,135 408,130 Q 437,125 466,120 Q 495,115 524,110 Q 553,105 582,100 Q 611,95 640,90 Q 669,85 698,80" 
+                           fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/>
+                     
+                     <!-- 校外收入线 - 平滑曲线 -->
+                     <path d="M 60,220 Q 89,215 118,210 Q 147,205 176,200 Q 205,195 234,190 Q 263,185 292,180 Q 321,175 350,170 Q 379,165 408,160 Q 437,155 466,150 Q 495,145 524,140 Q 553,135 582,130 Q 611,125 640,120 Q 669,115 698,110" 
+                           fill="none" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
+                     
+                     <!-- 总收入数据点 -->
+                     <circle cx="60" cy="180" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="118" cy="170" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="176" cy="160" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="234" cy="150" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="292" cy="140" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="350" cy="130" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="408" cy="120" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="466" cy="110" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="524" cy="100" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="582" cy="90" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="640" cy="80" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     <circle cx="698" cy="70" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                     
+                     <!-- 校内收入数据点 -->
+                     <circle cx="60" cy="190" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="118" cy="180" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="176" cy="170" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="234" cy="160" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="292" cy="150" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="350" cy="140" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="408" cy="130" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="466" cy="120" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="524" cy="110" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="582" cy="100" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="640" cy="90" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     <circle cx="698" cy="80" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                     
+                     <!-- 校外收入数据点 -->
+                     <circle cx="60" cy="220" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="118" cy="210" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="176" cy="200" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="234" cy="190" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="292" cy="180" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="350" cy="170" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="408" cy="160" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="466" cy="150" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="524" cy="140" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="582" cy="130" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="640" cy="120" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                     <circle cx="698" cy="110" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+            </svg>
+        </div>
+    </div>
+
+         <!-- 学院对比 -->
+    <div class="chart-container">
+             <h3 class="chart-title">学院对比</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                         <th>所属单位</th>
+                         <th>开放设备数量</th>
+                         <th>本月总收入</th>
+                         <th>上月总收入</th>
+                         <th>变化量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                         <td>化学学院</td>
+                         <td>145台</td>
+                         <td>45.6万元</td>
+                         <td>41.2万元</td>
+                         <td class="positive">+4.4万元</td>
+                </tr>
+                <tr>
+                         <td>材料科学与工程学院</td>
+                         <td>123台</td>
+                         <td>38.9万元</td>
+                         <td>35.8万元</td>
+                         <td class="positive">+3.1万元</td>
+                </tr>
+                <tr>
+                         <td>物理学院</td>
+                         <td>134台</td>
+                         <td>32.4万元</td>
+                         <td>29.6万元</td>
+                         <td class="positive">+2.8万元</td>
+                </tr>
+                <tr>
+                         <td>机械学院</td>
+                         <td>112台</td>
+                         <td>18.7万元</td>
+                         <td>17.2万元</td>
+                         <td class="positive">+1.5万元</td>
+                     </tr>
+                     <tr>
+                         <td>电子学院</td>
+                         <td>101台</td>
+                         <td>15.3万元</td>
+                         <td>14.1万元</td>
+                         <td class="positive">+1.2万元</td>
+                     </tr>
+                     <tr>
+                         <td>其他学院</td>
+                         <td>305台</td>
+                         <td>25.9万元</td>
+                         <td>24.4万元</td>
+                         <td class="positive">+1.5万元</td>
+                     </tr>
+                     <tr class="total-row">
+                         <td><strong>总计</strong></td>
+                         <td><strong>1,247台</strong></td>
+                         <td><strong>176.8万元</strong></td>
+                         <td><strong>162.3万元</strong></td>
+                         <td><strong>+14.5万元</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+         <!-- 收入Top5设备(本月) -->
+    <div class="chart-container">
+             <h3 class="chart-title">收入Top5设备(本月)</h3>
+             <table class="data-table">
+                 <thead>
+                     <tr>
+                         <th>排名</th>
+                         <th>设备名称</th>
+                         <th>设备负责人</th>
+                         <th>所属单位</th>
+                         <th>累计收入</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>1</td>
+                         <td>X射线衍射仪</td>
+                         <td>张教授</td>
+                         <td>材料科学与工程学院</td>
+                         <td>156.8万元</td>
+                     </tr>
+                     <tr>
+                         <td>2</td>
+                         <td>扫描电子显微镜</td>
+                         <td>李博士</td>
+                         <td>化学学院</td>
+                         <td>134.5万元</td>
+                     </tr>
+                     <tr>
+                         <td>3</td>
+                         <td>高效液相色谱仪</td>
+                         <td>赵教授</td>
+                         <td>化学学院</td>
+                         <td>98.7万元</td>
+                     </tr>
+                     <tr>
+                         <td>4</td>
+                         <td>原子力显微镜</td>
+                         <td>王研究员</td>
+                         <td>物理学院</td>
+                         <td>87.3万元</td>
+                     </tr>
+                     <tr>
+                         <td>5</td>
+                         <td>气相色谱质谱联用仪</td>
+                         <td>孙博士</td>
+                         <td>化学学院</td>
+                         <td>76.2万元</td>
+                     </tr>
+                 </tbody>
+             </table>
+        </div>
+    </div>
+
+ 
+
+    <!-- 报告结束 -->
+    <div class="page content-page page-break" id="report-end">
+        <div style="text-align: center; padding: 100px 0;">
+            <h2 style="color: #1e1b4b; margin-bottom: 30px;">报告结束</h2>
+            <p style="color: #64748b; font-size: 16px; margin-bottom: 20px;">感谢阅读校级设备开放共享月报</p>
+            <p style="color: #64748b; font-size: 14px;">如有疑问，请联系实验室设备管理员</p>
+            <div style="margin-top: 50px; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 12px; margin: 0;">
+                    <strong>报告生成系统：</strong>小来实验室 LabVision<br>
+                    <strong>生成时间：</strong>2024年12月31日<br>
+                    <strong>报告版本：</strong>v1.0
+                </p>
+    </div>
+</div>
+    </div>
+</body>
+</html>

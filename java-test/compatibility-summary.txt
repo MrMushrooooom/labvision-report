@@ -1,0 +1,50 @@
+HTML转PDF兼容性总结报告
+==================================================
+
+测试时间: $(date)
+测试文件数量: $(ls test-results/*_report.txt | wc -l)
+
+## 03-化学品月报-校级
+文件大小: 98905字符
+CSS兼容性问题:
+  - - conic-gradient: 2 次 (可能不兼容)
+
+## 04-化学品月报-学院级
+文件大小: 97299字符
+CSS兼容性问题:
+  - - linear-gradient: 12 次 (可能不兼容)
+  - - conic-gradient: 2 次 (可能不兼容)
+  - - box-shadow: 14 次 (可能不兼容)
+  - - text-shadow: 2 次 (可能不兼容)
+
+## 05-设备开放共享月报-校级
+文件大小: 52366字符
+CSS兼容性问题:
+  - - linear-gradient: 5 次 (可能不兼容)
+  - - conic-gradient: 2 次 (可能不兼容)
+  - - text-shadow: 2 次 (可能不兼容)
+
+
+总体建议
+==================================================
+
+1. 优先级高的问题（需要立即修复）:
+   - linear-gradient: 不兼容iText7，需要替换为纯色
+   - box-shadow: 不兼容，需要替换为border
+   - text-shadow: 不兼容，建议移除
+
+2. 优先级中等的问题:
+   - conic-gradient: 饼图可能显示异常，建议测试
+   - transform: 可能影响布局，需要验证
+
+3. 兼容性良好的CSS属性:
+   - display: block/inline-block
+   - text-align, margin, padding, border
+   - position: relative/absolute
+
+4. 建议的修复策略:
+   - 使用纯色背景替代渐变
+   - 使用border替代阴影效果
+   - 移除所有hover和动画效果
+   - 确保使用兼容的布局方式
+

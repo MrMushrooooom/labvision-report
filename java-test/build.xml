@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HtmlToPdfTest" default="compile" basedir=".">
+    
+    <description>HTML转PDF测试项目</description>
+    
+    <!-- 项目属性 -->
+    <property name="src.dir" value="src/main/java"/>
+    <property name="build.dir" value="target"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="test.html" value="../reports/03-化学品月报-校级.html"/>
+    <property name="output.pdf" value="./output.pdf"/>
+    
+    <!-- 清理目标 -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <echo message="清理完成"/>
+    </target>
+    
+    <!-- 创建目录 -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${lib.dir}"/>
+    </target>
+    
+    <!-- 编译Java程序 -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="*.jar"/>
+            </classpath>
+        </javac>
+        <echo message="编译完成"/>
+    </target>
+    
+    <!-- 运行测试程序 -->
+    <target name="run" depends="compile">
+        <echo message="正在运行HTML转PDF测试程序..."/>
+        <java classname="HtmlToPdfTest" classpath="${build.dir}">
+            <arg value="${test.html}"/>
+            <arg value="${output.pdf}"/>
+        </java>
+    </target>
+    
+    <!-- 下载依赖库 -->
+    <target name="download-deps" depends="init">
+        <echo message="正在下载依赖库..."/>
+        <!-- 这里可以添加下载iText7等库的逻辑 -->
+        <echo message="注意：要完整测试PDF转换，需要手动下载iText7库"/>
+    </target>
+    
+    <!-- 完整构建 -->
+    <target name="build" depends="clean,compile,run">
+        <echo message="构建完成"/>
+    </target>
+    
+</project>

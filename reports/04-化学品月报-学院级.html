@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>化学品月报（学院级）</title>
+    <style>
+        /* 固定打印页面为 A4，无边距 */
+        @page { size: A4; margin: 0; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimSun", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        .page {
+            page-break-after: always;
+            min-height: 100vh;
+            padding: 2cm;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        /* 封面：固定 A4 高度，深蓝色背景占满整页 */
+        .cover-page {
+            height: 297mm;
+            padding: 20mm;
+            page-break-after: always !important;
+            page-break-inside: avoid !important;
+            overflow: hidden;
+            background: #0a0f1a;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+        }
+
+        /* 打印样式 */
+        @media print {
+            .cover-page {
+                height: 297mm !important;
+                padding: 20mm !important;
+                background: #0a0f1a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .toc-page {
+                height: 100vh !important;
+                page-break-after: always !important;
+            }
+
+            .content-page {
+                page-break-before: always;
+            }
+
+            /* 折线图打印样式 - 防止跑偏 */
+            .trend-chart {
+                position: relative !important;
+                overflow: visible !important;
+                page-break-inside: avoid !important;
+            }
+
+            .trend-chart, .trend-svg {
+                overflow: visible !important;
+            }
+
+            .trend-svg {
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                transform: none !important;
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .trend-svg svg {
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                transform: none !important;
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .trend-lines {
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                transform: none !important;
+            }
+
+            .trend-point {
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                transform: none !important;
+            }
+        }
+
+        /* 封面样式 */
+        .cover-header {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0;
+            padding-top: 20px;
+            padding-left: 2.5cm;
+        }
+
+        .brand-section {
+            padding: 25px 30px;
+            text-align: left;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .brand-english {
+            font-size: 16px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 3px;
+            font-family: "Arial", sans-serif;
+        }
+
+        .cover-main {
+            position: relative;
+            z-index: 2;
+            margin: 0;
+            padding: 2.5cm;
+            width: 100%;
+            text-align: center;
+            height: 50vh;
+        }
+
+        .title-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            padding-top: 10vh;
+        }
+
+        .cover-title {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: 12px;
+            color: #ffffff;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .cover-title::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 120px;
+            height: 3px;
+            background: #60a5fa;
+            border-radius: 2px;
+        }
+
+        .cover-subtitle {
+            font-size: 28px;
+            margin-bottom: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: "Arial", sans-serif;
+            white-space: nowrap;
+        }
+
+        .cover-divider {
+            width: 140px;
+            height: 2px;
+            background: #60a5fa;
+            margin-bottom: 28px;
+            border-radius: 1px;
+        }
+
+        .cover-description {
+            font-size: 20px;
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 700px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 1.2px;
+            margin-bottom: 40px;
+        }
+
+        .cover-footer {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            margin-top: 0;
+            padding-bottom: 20px;
+            padding-top: 5vh;
+        }
+
+        .cover-info {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2.5cm;
+        }
+
+        .info-row {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item {
+            display: inline-block;
+            text-align: center;
+            min-width: 120px;
+            margin: 0 25px;
+            vertical-align: top;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            letter-spacing: 1px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-value {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            font-size: 16px;
+        }
+
+        /* 目录页样式 */
+        .toc-page {
+            background: #ffffff;
+            padding: 1.5cm 2cm;
+            height: 100vh;
+            text-align: center;
+            page-break-after: always;
+        }
+
+        .toc-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e1b4b;
+            margin-bottom: 20px;
+        }
+
+        .toc-list {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: left;
+            padding-top: 10px;
+        }
+
+        .toc-item {
+            margin-bottom: 18px;
+            display: block;
+            text-align: left;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .toc-item:hover {
+            background: #f8fafc;
+            padding-left: 10px;
+            border-left: 3px solid #4338ca;
+        }
+
+        .toc-number {
+            display: inline-block;
+            width: 35px;
+            font-weight: 600;
+            color: #4338ca;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .toc-content {
+            display: inline-block;
+            width: 320px;
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .toc-dots {
+            display: none; /* 隐藏点线 */
+        }
+
+        .toc-page-number {
+            display: none; /* 隐藏页码 */
+        }
+
+        /* 内容页样式 */
+        .content-page {
+            background: white;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e1b4b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4338ca;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e1b4b;
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* 数据表格样式 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            font-weight: bold;
+            color: #1e1b4b;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .total-row {
+            background-color: #1e40af !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        .positive {
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        .warning {
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        /* 子标题样式 */
+        .sub-chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e1b4b;
+            margin: 30px 0 20px 0;
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-left: 4px solid #4338ca;
+            border-radius: 0 12px 12px 0;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .sub-chart-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #4338ca;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* 趋势图表样式 */
+        .trend-chart {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: visible !important;
+        }
+
+        .chart-legend {
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .trend-svg {
+            width: 100%;
+            height: 300px;
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            overflow: visible !important;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .trend-svg text {
+            font-family: Arial, sans-serif;
+        }
+
+        .trend-svg line {
+            stroke-linecap: round;
+        }
+
+        .trend-svg polyline {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .trend-svg circle {
+
+        }
+
+        .trend-lines {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .trend-line {
+            position: relative;
+            height: 100%;
+        }
+
+        .trend-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            border: 2px solid white;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .trend-point::after {
+            content: attr(data-month) ': ' attr(data-value) '吨';
+            position: absolute;
+            top: -30px;
+            left: -20px;
+            background: #1e1b4b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .total-line .trend-point {
+            color: #1e40af;
+        }
+
+        .general-line .trend-point {
+            color: #7c3aed;
+        }
+
+        .dangerous-line .trend-point {
+            color: #dc2626;
+        }
+
+        .controlled-line .trend-point {
+            color: #ea580c;
+        }
+
+        /* 饼图样式 */
+        .pie-charts-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .pie-chart-wrapper {
+            text-align: center;
+            width: 240px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            vertical-align: top;
+            margin: 0 10px 20px 10px;
+        }
+
+        .pie-chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            background: #4338ca;
+            border-radius: 8px;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        .pie-legend {
+            margin-top: 15px;
+        }
+
+        .pie-legend .legend-item {
+            display: inline-block;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+
+        .pie-legend .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .pie-legend .legend-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .pie-legend .legend-label {
+            font-size: 12px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .pie-legend .legend-value {
+            font-size: 11px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <!-- 封面页 -->
+    <div class="page cover-page">
+        <div class="cover-header">
+            <div class="brand-section">
+                <div class="brand-name">小来实验室</div>
+                <div class="brand-english">LabVision</div>
+            </div>
+        </div>
+        
+        <div class="cover-main">
+            <div class="title-section">
+                <h1 class="cover-title">化学品月报</h1>
+                <h2 class="cover-subtitle">Chemical Monthly Report</h2>
+                <div class="cover-divider"></div>
+                <p class="cover-description">化学学院化学品管理月度数据报告</p>
+            </div>
+        </div>
+        
+        <div class="cover-footer">
+            <div class="cover-info">
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">报告时间</span>
+                        <span class="info-value">2024年12月</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">报告类型</span>
+                        <span class="info-value">学院级月度报告</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">生成系统</span>
+                        <span class="info-value">小来实验室</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">生成时间</span>
+                        <span class="info-value">2024年12月31日</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 目录页 -->
+    <div class="page toc-page">
+        <h1 class="toc-title">目录</h1>
+        <div class="toc-list">
+            <div class="toc-item">
+                <span class="toc-number">1</span>
+                <span class="toc-content">核心指标概览</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">2</span>
+                <span class="toc-content">化学品库存分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">3</span>
+                <span class="toc-content">化学品入库量分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">4</span>
+                <span class="toc-content">化学品领用量分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">5</span>
+                <span class="toc-content">化学品使用量分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">6</span>
+                <span class="toc-content">化学品分布情况</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">7</span>
+                <span class="toc-content">化学品全生命周期管理</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">8</span>
+                <span class="toc-content">成本分析</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 内容页 - 核心指标概览 -->
+    <div class="page content-page" id="executive-summary">
+        <h2 class="section-title">核心指标概览</h2>
+        
+        <!-- 单位换算说明 -->
+        <div class="unit-conversion-note">
+            <p><strong>计算总量时，单位换算：</strong>1千升 = 1吨</p>
+        </div>
+        
+        <!-- 核心数据概览 -->
+        <div class="chart-container">
+            <h3 class="chart-title">核心数据概览</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>数值</th>
+                        <th>单位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学品种类总数</td>
+                        <td>1,247</td>
+                        <td>种</td>
+                    </tr>
+                    <tr>
+                        <td>化学品总价值</td>
+                        <td>¥2.8M</td>
+                        <td>万元</td>
+                    </tr>
+                    <tr>
+                        <td>化学品(固体)总重量</td>
+                        <td>15.6</td>
+                        <td>吨</td>
+                    </tr>
+                    <tr>
+                        <td>化学品(液体)总体积</td>
+                        <td>8.9</td>
+                        <td>千升</td>
+                    </tr>
+                    <tr>
+                        <td>管制品种类数</td>
+                        <td>89</td>
+                        <td>种</td>
+                    </tr>
+                    <tr>
+                        <td>危险化学品种类数</td>
+                        <td>156</td>
+                        <td>种</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 月度变化趋势 -->
+        <div class="chart-container">
+            <h3 class="chart-title">月度变化趋势</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>变化量</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学品种类总数</td>
+                        <td class="positive">+49种</td>
+                        <td class="positive">+4.1%</td>
+                    </tr>
+                    <tr>
+                        <td>化学品总价值</td>
+                        <td class="positive">+0.15万元</td>
+                        <td class="positive">+5.7%</td>
+                    </tr>
+                    <tr>
+                        <td>固体总重量</td>
+                        <td class="positive">+0.8吨</td>
+                        <td class="positive">+5.4%</td>
+                    </tr>
+                    <tr>
+                        <td>液体总体积</td>
+                        <td class="positive">+0.7千升</td>
+                        <td class="positive">+8.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 管理效率指标 -->
+        <div class="chart-container">
+            <h3 class="chart-title">管理效率指标</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>数值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>申购审批通过率</td>
+                        <td>94.2%</td>
+                    </tr>
+                    <tr>
+                        <td>盘点准确率</td>
+                        <td>96.8%</td>
+                    </tr>
+                    <tr>
+                        <td>入库平均用时</td>
+                        <td>2天3小时</td>
+                    </tr>
+                    <tr>
+                        <td>领用审批平均用时</td>
+                        <td>1天5小时</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 安全风险监控 -->
+        <div class="chart-container">
+            <h3 class="chart-title">安全风险监控</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>数值</th>
+                        <th>对比上月</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>存在禁配风险的房间数量</td>
+                        <td class="warning">3间</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>超过存储阈值的房间数量</td>
+                        <td class="warning">2间</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>存储合规律</td>
+                        <td>97.2%</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>风险房间总数</td>
+                        <td>5间</td>
+                        <td class="positive">-1间 (-25.0%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 成本控制情况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">成本控制情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>数值</th>
+                        <th>对比上月</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>本月采购金额</td>
+                        <td>0.30万元</td>
+                        <td class="positive">+0.05万元 (+20.0%)</td>
+                    </tr>
+                    <tr>
+                        <td>供应商合作数量</td>
+                        <td>4家</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>平均采购周期</td>
+                        <td>3.2天</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品库存分析 -->
+    <div class="page content-page page-break" id="chemical-overview">
+        <h2 class="section-title">化学品库存分析</h2>
+        
+        <div class="chart-container">
+            <h3 class="chart-title">库存结构分析</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>存量类型</th>
+                        <th>种类数</th>
+                        <th>重量/体积</th>
+                        <th>价值(万元)</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>教学实验用</td>
+                        <td>456</td>
+                        <td>8.2吨</td>
+                        <td>1.2</td>
+                        <td>36.6%</td>
+                    </tr>
+                    <tr>
+                        <td>科研项目用</td>
+                        <td>523</td>
+                        <td>9.8吨</td>
+                        <td>1.1</td>
+                        <td>42.0%</td>
+                    </tr>
+                    <tr>
+                        <td>库房储备</td>
+                        <td>268</td>
+                        <td>6.5吨</td>
+                        <td>0.5</td>
+                        <td>21.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">月度趋势对比</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>11月</th>
+                        <th>12月</th>
+                        <th>变化量</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学品种类总数</td>
+                        <td>1,198</td>
+                        <td>1,247</td>
+                        <td>+49</td>
+                        <td>+4.1%</td>
+                    </tr>
+                    <tr>
+                        <td>化学品总价值(万元)</td>
+                        <td>2.65</td>
+                        <td>2.80</td>
+                        <td>+0.15</td>
+                        <td>+5.7%</td>
+                    </tr>
+                    <tr>
+                        <td>固体总重量(吨)</td>
+                        <td>14.8</td>
+                        <td>15.6</td>
+                        <td>+0.8</td>
+                        <td>+5.4%</td>
+                    </tr>
+                    <tr>
+                        <td>液体总体积(千升)</td>
+                        <td>8.2</td>
+                        <td>8.9</td>
+                        <td>+0.7</td>
+                        <td>+8.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">库存变化分析</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>存量类型</th>
+                        <th>本月新增</th>
+                        <th>本月消耗</th>
+                        <th>净变化</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>教学实验用</td>
+                        <td>2.1吨</td>
+                        <td>1.8吨</td>
+                        <td>+0.3吨</td>
+                        <td>+3.8%</td>
+                    </tr>
+                    <tr>
+                        <td>科研项目用</td>
+                        <td>3.2吨</td>
+                        <td>2.9吨</td>
+                        <td>+0.3吨</td>
+                        <td>+3.2%</td>
+                    </tr>
+                    <tr>
+                        <td>库房储备</td>
+                        <td>1.5吨</td>
+                        <td>1.2吨</td>
+                        <td>+0.3吨</td>
+                        <td>+4.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">库存质量分析</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>质量指标</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化趋势</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>库存周转率</td>
+                        <td>2.8次/月</td>
+                        <td>2.6次/月</td>
+                        <td>↑ 7.7%</td>
+                        <td class="positive">良好</td>
+                    </tr>
+                    <tr>
+                        <td>过期品比例</td>
+                        <td>0.8%</td>
+                        <td>1.2%</td>
+                        <td>↓ 33.3%</td>
+                        <td class="positive">改善</td>
+                    </tr>
+                    <tr>
+                        <td>呆滞品比例</td>
+                        <td>2.1%</td>
+                        <td>2.5%</td>
+                        <td>↓ 16.0%</td>
+                        <td class="positive">改善</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">近12个月总库存量趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #1e40af;"></div>
+                        <span>总量</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #7c3aed;"></div>
+                        <span>一般化学品</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #dc2626;"></div>
+                        <span>危险化学品</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ea580c;"></div>
+                        <span>管制品</span>
+                    </div>
+                </div>
+                
+                <svg width="100%" height="300" viewBox="0 0 800 300" class="trend-svg">
+                    <!-- Y轴 -->
+                    <line x1="60" y1="20" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <!-- X轴 -->
+                    <line x1="60" y1="280" x2="760" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="50" y="25" text-anchor="end" font-size="12" fill="#64748b">30吨</text>
+                    <text x="50" y="65" text-anchor="end" font-size="12" fill="#64748b">25吨</text>
+                    <text x="50" y="105" text-anchor="end" font-size="12" fill="#64748b">20吨</text>
+                    <text x="50" y="145" text-anchor="end" font-size="12" fill="#64748b">15吨</text>
+                    <text x="50" y="185" text-anchor="end" font-size="12" fill="#64748b">10吨</text>
+                    <text x="50" y="225" text-anchor="end" font-size="12" fill="#64748b">5吨</text>
+                    <text x="50" y="265" text-anchor="end" font-size="12" fill="#64748b">0吨</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 总量线 - 平滑曲线 -->
+                    <path d="M 60,120 Q 89,118 118,116 Q 147,113 176,110 Q 205,107 234,104 Q 263,102 292,100 Q 321,98 350,96 Q 379,94 408,92 Q 437,90 466,88 Q 495,86 524,84 Q 553,82 582,80 Q 611,84 640,88 Q 669,86 698,84" 
+                          fill="none" stroke="#1e40af" stroke-width="3" stroke-linecap="round"/>
+                    <!-- 一般化学品线 - 平滑曲线 -->
+                    <path d="M 60,140 Q 89,138 118,136 Q 147,133 176,130 Q 205,127 234,124 Q 263,122 292,120 Q 321,118 350,116 Q 379,114 408,112 Q 437,110 466,108 Q 495,106 524,104 Q 553,102 582,100 Q 611,104 640,108 Q 669,110 698,112" 
+                          fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/>
+                    <!-- 危险化学品线 - 平滑曲线 -->
+                    <path d="M 60,180 Q 89,179 118,178 Q 147,176 176,174 Q 205,172 234,170 Q 263,169 292,168 Q 321,167 350,166 Q 379,165 408,164 Q 437,163 466,162 Q 495,161 524,160 Q 553,159 582,158 Q 611,160 640,162 Q 669,163 698,164" 
+                          fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                    <!-- 管制品线 - 平滑曲线 -->
+                    <path d="M 60,260 Q 89,259 118,258 Q 147,257 176,256 Q 205,255 234,254 Q 263,253 292,252 Q 321,251 350,250 Q 379,249 408,248 Q 437,247 466,246 Q 495,245 524,244 Q 553,243 582,242 Q 611,243 640,244 Q 669,245 698,246" 
+                          fill="none" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- 所有线的数据点 -->
+                    <!-- 总量线数据点 -->
+                    <circle cx="60" cy="120" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="116" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="110" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="104" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="100" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="96" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="92" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="88" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="84" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="80" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="88" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="84" r="4" fill="#1e40af" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 一般化学品线数据点 -->
+                    <circle cx="60" cy="140" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="136" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="130" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="124" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="120" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="116" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="112" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="108" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="104" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="100" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="108" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="112" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 危险化学品线数据点 -->
+                    <circle cx="60" cy="180" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="178" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="174" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="170" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="168" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="166" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="164" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="162" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="160" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="158" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="162" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="164" r="4" fill="#dc2626" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 管制品线数据点 -->
+                    <circle cx="60" cy="260" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="258" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="256" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="254" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="252" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="250" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="248" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="246" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="244" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="242" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="244" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="246" r="4" fill="#ea580c" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">近12个月使用量趋势变化</h3>
+            <div class="trend-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #059669;"></div>
+                        <span>总使用量</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0891b2;"></div>
+                        <span>教学实验用</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0ea5e9;"></div>
+                        <span>科研项目用</span>
+                    </div>
+                </div>
+                
+                <svg width="100%" height="300" viewBox="0 0 800 300" class="trend-svg">
+                    <!-- Y轴 -->
+                    <line x1="60" y1="20" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <!-- X轴 -->
+                    <line x1="60" y1="280" x2="760" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="50" y="25" text-anchor="end" font-size="12" fill="#64748b">12吨</text>
+                    <text x="50" y="65" text-anchor="end" font-size="12" fill="#64748b">10吨</text>
+                    <text x="50" y="105" text-anchor="end" font-size="12" fill="#64748b">8吨</text>
+                    <text x="50" y="145" text-anchor="end" font-size="12" fill="#64748b">6吨</text>
+                    <text x="50" y="185" text-anchor="end" font-size="12" fill="#64748b">4吨</text>
+                    <text x="50" y="225" text-anchor="end" font-size="12" fill="#64748b">2吨</text>
+                    <text x="50" y="265" text-anchor="end" font-size="12" fill="#64748b">0吨</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    
+                    <!-- 总使用量线 - 平滑曲线 -->
+                    <path d="M 60,120 Q 89,118 118,116 Q 147,113 176,110 Q 205,107 234,104 Q 263,102 292,100 Q 321,98 350,96 Q 379,94 408,92 Q 437,90 466,88 Q 495,86 524,84 Q 553,82 582,80 Q 611,84 640,88 Q 669,86 698,84" 
+                          fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                    <!-- 教学实验用线 - 平滑曲线 -->
+                    <path d="M 60,140 Q 89,138 118,136 Q 147,133 176,130 Q 205,127 234,124 Q 263,122 292,120 Q 321,118 350,116 Q 379,114 408,112 Q 437,110 466,108 Q 495,106 524,104 Q 553,102 582,100 Q 611,104 640,108 Q 669,110 698,112" 
+                          fill="none" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+                    <!-- 科研项目用线 - 平滑曲线 -->
+                    <path d="M 60,200 Q 89,198 118,196 Q 147,193 176,190 Q 205,187 234,184 Q 263,182 292,180 Q 321,178 350,176 Q 379,174 408,172 Q 437,170 466,168 Q 495,166 524,164 Q 553,162 582,160 Q 611,164 640,168 Q 669,170 698,172" 
+                          fill="none" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- 所有线的数据点 -->
+                    <!-- 总使用量线数据点 -->
+                    <circle cx="60" cy="120" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="116" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="110" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="104" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="100" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="96" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="92" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="88" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="84" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="80" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="88" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="84" r="4" fill="#059669" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 教学实验用线数据点 -->
+                    <circle cx="60" cy="140" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="136" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="130" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="124" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="120" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="116" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="112" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="108" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="104" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="100" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="108" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="112" r="4" fill="#0891b2" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 科研项目用线数据点 -->
+                    <circle cx="60" cy="200" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="118" cy="196" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="176" cy="190" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="234" cy="184" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="292" cy="180" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="350" cy="176" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="408" cy="172" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="466" cy="168" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="524" cy="164" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="582" cy="160" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="640" cy="168" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                    <circle cx="698" cy="172" r="4" fill="#0ea5e9" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">化学品分类统计</h3>
+            <!-- 双饼图 -->
+            <div class="pie-charts-container">
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">一般化学品 vs 危险化学品</div>
+                    <div class="pie-chart">
+                        <!-- 一般 vs 危险  65% / 35% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="65/35 pie">
+                            <!-- 底层整圈：危险化学品（紫色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#8b5cf6" stroke-width="20"/>
+                          
+                            <!-- 上层弧：一般化学品 65%（蓝色）——用 polyline 近似圆弧 -->
+                            <polyline fill="none" stroke="#3b82f6" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42 35.28,147.02
+                              " />
+                          
+                            <!-- 中空甜甜圈 -->
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+  
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">一般化学品 (65%)</span>
+                                <span class="legend-value">10.1吨</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #8b5cf6;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">危险化学品 (35%)</span>
+                                <span class="legend-value">5.5吨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">非管制品 vs 管制品</div>
+                    <div class="pie-chart">
+                        <!-- 非管制 vs 管制  93% / 7% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="93/7 pie">
+                            <!-- 底层整圈：管制品（紫色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#8b5cf6" stroke-width="20"/>
+                          
+                            <!-- 上层弧：非管制品 93%（蓝色） -->
+                            <polyline fill="none" stroke="#3b82f6" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                              " />
+                          
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+                          
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">非管制品 (93%)</span>
+                                <span class="legend-value">14.5吨</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #8b5cf6;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">管制品 (7%)</span>
+                                <span class="legend-value">1.1吨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 管制分类统计表格 -->
+            <h4 class="sub-chart-title">管制分类详细统计</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>管制分类</th>
+                        <th>种类数</th>
+                        <th>重量(kg)</th>
+                        <th>体积(L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>易制毒—一类</td>
+                        <td>12</td>
+                        <td>45.2</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>易制毒—二类</td>
+                        <td>18</td>
+                        <td>78.5</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>易制毒—三类</td>
+                        <td>25</td>
+                        <td>156.8</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>易制爆</td>
+                        <td>15</td>
+                        <td>23.4</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>剧毒品</td>
+                        <td>8</td>
+                        <td>2.1</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>爆炸品</td>
+                        <td>3</td>
+                        <td>0.8</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>麻醉药品与精神药品</td>
+                        <td>8</td>
+                        <td>-</td>
+                        <td>15.2</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>总计</strong></td>
+                        <td><strong>89</strong></td>
+                        <td><strong>307.0</strong></td>
+                        <td><strong>15.2</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品入库量分析 -->
+    <div class="page content-page page-break" id="inbound-analysis">
+        <h2 class="section-title">化学品入库量分析</h2>
+        
+        <!-- 入库量总体概况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">入库量总体概况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>入库次数</td>
+                        <td>142</td>
+                        <td>128</td>
+                        <td class="positive">+14</td>
+                        <td class="positive">+10.9%</td>
+                    </tr>
+                    <tr>
+                        <td>入库种类数</td>
+                        <td>89</td>
+                        <td>78</td>
+                        <td class="positive">+11</td>
+                        <td class="positive">+14.1%</td>
+                    </tr>
+                    <tr>
+                        <td>入库化学品(固体)</td>
+                        <td>2.1吨</td>
+                        <td>1.8吨</td>
+                        <td class="positive">+0.3吨</td>
+                        <td class="positive">+16.7%</td>
+                    </tr>
+                    <tr>
+                        <td>入库化学品(液体)</td>
+                        <td>1.8千升</td>
+                        <td>1.5千升</td>
+                        <td class="positive">+0.3千升</td>
+                        <td class="positive">+20.0%</td>
+                    </tr>
+                    <tr>
+                        <td>入库化学品(一般化学品)</td>
+                        <td>2.2吨</td>
+                        <td>1.9吨</td>
+                        <td class="positive">+0.3吨</td>
+                        <td class="positive">+15.8%</td>
+                    </tr>
+                    <tr>
+                        <td>入库化学品(危险化学品)</td>
+                        <td>1.4吨</td>
+                        <td>1.2吨</td>
+                        <td class="positive">+0.2吨</td>
+                        <td class="positive">+16.7%</td>
+                    </tr>
+                    <tr>
+                        <td>入库化学品(管制化学品)</td>
+                        <td>0.3吨</td>
+                        <td>0.2吨</td>
+                        <td class="positive">+0.1吨</td>
+                        <td class="positive">+50.0%</td>
+                    </tr>
+                    <tr>
+                        <td>入库总量(吨)</td>
+                        <td>3.9吨</td>
+                        <td>3.3吨</td>
+                        <td class="positive">+0.6吨</td>
+                        <td class="positive">+18.2%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 入库量月度趋势 -->
+        <div class="chart-container">
+            <h3 class="chart-title">入库量月度趋势</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>月份</th>
+                        <th>入库总量(吨)</th>
+                        <th>一般化学品(吨)</th>
+                        <th>危险化学品(吨)</th>
+                        <th>管制化学品(吨)</th>
+                        <th>环比变化</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10月</td>
+                        <td>2.5</td>
+                        <td>1.4</td>
+                        <td>0.8</td>
+                        <td>0.3</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>11月</td>
+                        <td>2.8</td>
+                        <td>1.6</td>
+                        <td>1.0</td>
+                        <td>0.2</td>
+                        <td class="positive">+12.0%</td>
+                    </tr>
+                    <tr>
+                        <td>12月</td>
+                        <td>3.2</td>
+                        <td>1.8</td>
+                        <td>1.2</td>
+                        <td>0.2</td>
+                        <td class="positive">+14.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品领用量分析 -->
+    <div class="page content-page page-break" id="outbound-analysis">
+        <h2 class="section-title">化学品领用量分析</h2>
+        
+        <!-- 领用量总体概况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">领用量总体概况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>领用次数</td>
+                        <td>234</td>
+                        <td>218</td>
+                        <td class="positive">+16</td>
+                        <td class="positive">+7.3%</td>
+                    </tr>
+                    <tr>
+                        <td>领用种类数</td>
+                        <td>156</td>
+                        <td>142</td>
+                        <td class="positive">+14</td>
+                        <td class="positive">+9.9%</td>
+                    </tr>
+                    <tr>
+                        <td>领用化学品(固体)</td>
+                        <td>3.2吨</td>
+                        <td>2.8吨</td>
+                        <td class="positive">+0.4吨</td>
+                        <td class="positive">+14.3%</td>
+                    </tr>
+                    <tr>
+                        <td>领用化学品(液体)</td>
+                        <td>2.8千升</td>
+                        <td>2.4千升</td>
+                        <td class="positive">+0.4千升</td>
+                        <td class="positive">+16.7%</td>
+                    </tr>
+                    <tr>
+                        <td>领用总量(吨)</td>
+                        <td>6.0吨</td>
+                        <td>5.2吨</td>
+                        <td class="positive">+0.8吨</td>
+                        <td class="positive">+15.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 领用量月度趋势 -->
+        <div class="chart-container">
+            <h3 class="chart-title">领用量月度趋势</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>月份</th>
+                        <th>领用总量(吨)</th>
+                        <th>一般化学品(吨)</th>
+                        <th>危险化学品(吨)</th>
+                        <th>管制化学品(吨)</th>
+                        <th>环比变化</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10月</td>
+                        <td>4.8</td>
+                        <td>3.2</td>
+                        <td>1.2</td>
+                        <td>0.4</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>11月</td>
+                        <td>5.2</td>
+                        <td>3.5</td>
+                        <td>1.3</td>
+                        <td>0.4</td>
+                        <td class="positive">+8.3%</td>
+                    </tr>
+                    <tr>
+                        <td>12月</td>
+                        <td>6.0</td>
+                        <td>4.0</td>
+                        <td>1.5</td>
+                        <td>0.5</td>
+                        <td class="positive">+15.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品使用量分析 -->
+    <div class="page content-page page-break" id="usage-analysis">
+        <h2 class="section-title">化学品使用量分析</h2>
+        
+        <!-- 使用量总体概况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">使用量总体概况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化量</th>
+                        <th>变化率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>使用次数</td>
+                        <td>456</td>
+                        <td>398</td>
+                        <td class="positive">+58</td>
+                        <td class="positive">+14.6%</td>
+                    </tr>
+                    <tr>
+                        <td>使用种类数</td>
+                        <td>234</td>
+                        <td>198</td>
+                        <td class="positive">+36</td>
+                        <td class="positive">+18.2%</td>
+                    </tr>
+                    <tr>
+                        <td>使用化学品(固体)</td>
+                        <td>4.5吨</td>
+                        <td>3.8吨</td>
+                        <td class="positive">+0.7吨</td>
+                        <td class="positive">+18.4%</td>
+                    </tr>
+                    <tr>
+                        <td>使用化学品(液体)</td>
+                        <td>3.1千升</td>
+                        <td>2.6千升</td>
+                        <td class="positive">+0.5千升</td>
+                        <td class="positive">+19.2%</td>
+                    </tr>
+                    <tr>
+                        <td>使用总量(吨)</td>
+                        <td>7.6吨</td>
+                        <td>6.4吨</td>
+                        <td class="positive">+1.2吨</td>
+                        <td class="positive">+18.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 使用量月度趋势 -->
+        <div class="chart-container">
+            <h3 class="chart-title">使用量月度趋势</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>月份</th>
+                        <th>使用总量(吨)</th>
+                        <th>一般化学品(吨)</th>
+                        <th>危险化学品(吨)</th>
+                        <th>管制化学品(吨)</th>
+                        <th>环比变化</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10月</td>
+                        <td>5.6</td>
+                        <td>3.6</td>
+                        <td>1.6</td>
+                        <td>0.4</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>11月</td>
+                        <td>6.4</td>
+                        <td>4.1</td>
+                        <td>1.8</td>
+                        <td>0.5</td>
+                        <td class="positive">+14.3%</td>
+                    </tr>
+                    <tr>
+                        <td>12月</td>
+                        <td>7.6</td>
+                        <td>4.9</td>
+                        <td>2.1</td>
+                        <td>0.6</td>
+                        <td class="positive">+18.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品分布情况 -->
+    <div class="page content-page page-break" id="distribution-analysis">
+        <h2 class="section-title">化学品分布情况</h2>
+        
+        <!-- 按楼宇分布情况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">按楼宇分布情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>楼宇名称</th>
+                        <th>化学品种类数</th>
+                        <th>固体重量(吨)</th>
+                        <th>液体体积(千升)</th>
+                        <th>总量(吨)</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>化学楼</td>
+                        <td>856</td>
+                        <td>4.2</td>
+                        <td>2.1</td>
+                        <td>6.3</td>
+                        <td>68.6%</td>
+                    </tr>
+                    <tr>
+                        <td>实验楼</td>
+                        <td>391</td>
+                        <td>1.9</td>
+                        <td>0.9</td>
+                        <td>2.8</td>
+                        <td>31.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 存量最大的房间排名 -->
+        <div class="chart-container">
+            <h3 class="chart-title">存量最大的房间排名（TOP 10）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>房间位置</th>
+                        <th>所属学院</th>
+                        <th>化学品种类数</th>
+                        <th>固体重量(吨)</th>
+                        <th>液体体积(千升)</th>
+                        <th>总量(吨)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>化学楼A-201</td>
+                        <td>化学学院</td>
+                        <td>89</td>
+                        <td>2.1</td>
+                        <td>1.8</td>
+                        <td>3.9</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>化学楼A-203</td>
+                        <td>化学学院</td>
+                        <td>78</td>
+                        <td>1.8</td>
+                        <td>1.5</td>
+                        <td>3.3</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>化学楼A-205</td>
+                        <td>化学学院</td>
+                        <td>67</td>
+                        <td>1.5</td>
+                        <td>1.2</td>
+                        <td>2.7</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>实验楼B-301</td>
+                        <td>化学学院</td>
+                        <td>58</td>
+                        <td>1.2</td>
+                        <td>1.0</td>
+                        <td>2.2</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>化学楼A-207</td>
+                        <td>化学学院</td>
+                        <td>52</td>
+                        <td>1.1</td>
+                        <td>0.9</td>
+                        <td>2.0</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>实验楼B-303</td>
+                        <td>化学学院</td>
+                        <td>48</td>
+                        <td>1.0</td>
+                        <td>0.8</td>
+                        <td>1.8</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>化学楼A-209</td>
+                        <td>化学学院</td>
+                        <td>45</td>
+                        <td>0.9</td>
+                        <td>0.7</td>
+                        <td>1.6</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>实验楼B-305</td>
+                        <td>化学学院</td>
+                        <td>42</td>
+                        <td>0.8</td>
+                        <td>0.6</td>
+                        <td>1.4</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>化学楼A-211</td>
+                        <td>化学学院</td>
+                        <td>38</td>
+                        <td>0.7</td>
+                        <td>0.5</td>
+                        <td>1.2</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>实验楼B-307</td>
+                        <td>化学学院</td>
+                        <td>35</td>
+                        <td>0.6</td>
+                        <td>0.4</td>
+                        <td>1.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 存储层级分布 -->
+        <div class="chart-container">
+            <h3 class="chart-title">存储层级分布</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>存储层级</th>
+                        <th>化学品种类数</th>
+                        <th>固体重量(吨)</th>
+                        <th>液体体积(千升)</th>
+                        <th>总量(吨)</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>学院库房</td>
+                        <td>456</td>
+                        <td>2.8</td>
+                        <td>1.5</td>
+                        <td>4.3</td>
+                        <td>36.6%</td>
+                    </tr>
+                    <tr>
+                        <td>房间</td>
+                        <td>791</td>
+                        <td>3.3</td>
+                        <td>1.5</td>
+                        <td>4.8</td>
+                        <td>63.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 风险等级分布 -->
+        <div class="chart-container">
+            <h3 class="chart-title">风险等级分布</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>风险等级</th>
+                        <th>化学品种类数</th>
+                        <th>固体重量(吨)</th>
+                        <th>液体体积(千升)</th>
+                        <th>总量(吨)</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IV级低风险</td>
+                        <td>856</td>
+                        <td>4.2</td>
+                        <td>2.1</td>
+                        <td>6.3</td>
+                        <td>68.6%</td>
+                    </tr>
+                    <tr>
+                        <td>III级中风险</td>
+                        <td>234</td>
+                        <td>1.2</td>
+                        <td>0.6</td>
+                        <td>1.8</td>
+                        <td>18.8%</td>
+                    </tr>
+                    <tr>
+                        <td>II级高风险</td>
+                        <td>89</td>
+                        <td>0.5</td>
+                        <td>0.2</td>
+                        <td>0.7</td>
+                        <td>7.1%</td>
+                    </tr>
+                    <tr>
+                        <td>I级重大风险</td>
+                        <td>68</td>
+                        <td>0.2</td>
+                        <td>0.1</td>
+                        <td>0.3</td>
+                        <td>5.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 化学品全生命周期管理 -->
+    <div class="page content-page page-break" id="lifecycle-management">
+        <h2 class="section-title">化学品全生命周期管理</h2>
+        
+        <!-- 月度管理数据 -->
+        <div class="chart-container">
+            <h3 class="chart-title">月度管理数据</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>管理环节</th>
+                        <th>本月次数</th>
+                        <th>涉及种类数</th>
+                        <th>固体重量(吨)</th>
+                        <th>液体体积(千升)</th>
+                        <th>总量(吨)</th>
+                        <th>相比上月</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>申购环节</td>
+                        <td>156</td>
+                        <td>89</td>
+                        <td>2.1</td>
+                        <td>1.8</td>
+                        <td>3.9</td>
+                        <td class="positive">+0.6吨 (+18.2%)</td>
+                    </tr>
+                    <tr>
+                        <td>入库环节</td>
+                        <td>142</td>
+                        <td>89</td>
+                        <td>2.1</td>
+                        <td>1.8</td>
+                        <td>3.9</td>
+                        <td class="positive">+0.6吨 (+18.2%)</td>
+                    </tr>
+                    <tr>
+                        <td>领用环节</td>
+                        <td>234</td>
+                        <td>156</td>
+                        <td>3.2</td>
+                        <td>2.8</td>
+                        <td>6.0</td>
+                        <td class="positive">+0.8吨 (+15.4%)</td>
+                    </tr>
+                    <tr>
+                        <td>使用环节</td>
+                        <td>456</td>
+                        <td>234</td>
+                        <td>4.5</td>
+                        <td>3.1</td>
+                        <td>7.6</td>
+                        <td class="positive">+1.2吨 (+18.8%)</td>
+                    </tr>
+                    <tr>
+                        <td>盘点环节</td>
+                        <td>89</td>
+                        <td>1,247</td>
+                        <td>15.6</td>
+                        <td>8.9</td>
+                        <td>24.5</td>
+                        <td class="positive">+2.1吨 (+9.4%)</td>
+                    </tr>
+                    <tr>
+                        <td>废弃环节</td>
+                        <td>23</td>
+                        <td>34</td>
+                        <td>0.8</td>
+                        <td>0.6</td>
+                        <td>1.4</td>
+                        <td class="warning">+0.3吨 (+27.3%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 流程审批效率分析 -->
+        <div class="chart-container">
+            <h3 class="chart-title">流程审批效率分析</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>流程环节</th>
+                        <th>效率指标</th>
+                        <th>本月数值</th>
+                        <th>上月数值</th>
+                        <th>变化趋势</th>
+                        <th>目标值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2">申购环节</td>
+                        <td>平均审批用时</td>
+                        <td>2天3小时</td>
+                        <td>2天5小时</td>
+                        <td class="positive">↓ 2小时</td>
+                        <td>≤3天</td>
+                    </tr>
+                    <tr>
+                        <td>审批通过率</td>
+                        <td>94.2%</td>
+                        <td>92.8%</td>
+                        <td class="positive">↑ 1.4%</td>
+                        <td>≥90%</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">入库环节</td>
+                        <td>平均审批用时</td>
+                        <td>2天3小时</td>
+                        <td>2天5小时</td>
+                        <td class="positive">↓ 2小时</td>
+                        <td>≤3天</td>
+                    </tr>
+                    <tr>
+                        <td>审批通过率</td>
+                        <td>98.7%</td>
+                        <td>98.5%</td>
+                        <td class="positive">↑ 0.2%</td>
+                        <td>≥98%</td>
+                    </tr>
+                    <tr>
+                        <td>平均入库用时</td>
+                        <td>1天8小时</td>
+                        <td>2天0小时</td>
+                        <td class="positive">↓ 4小时</td>
+                        <td>≤2天</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">领用环节</td>
+                        <td>平均审批用时</td>
+                        <td>1天5小时</td>
+                        <td>1天8小时</td>
+                        <td class="positive">↓ 3小时</td>
+                        <td>≤2天</td>
+                    </tr>
+                    <tr>
+                        <td>审批通过率</td>
+                        <td>96.8%</td>
+                        <td>95.2%</td>
+                        <td class="positive">↑ 1.6%</td>
+                        <td>≥95%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 内容页 - 成本分析 -->
+    <div class="page content-page page-break" id="cost-analysis">
+        <h2 class="section-title">成本分析</h2>
+        
+        <div class="chart-container">
+            <h3 class="chart-title">成本分析</h3>
+            
+            <!-- 采购成本分析 -->
+            <h4 class="sub-chart-title">采购成本分析</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>化学品类别</th>
+                        <th>本月采购金额(万元)</th>
+                        <th>上月采购金额(万元)</th>
+                        <th>本学期累计(万元)</th>
+                        <th>同比上月变化</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="total-row">
+                        <td><strong>全部化学品</strong></td>
+                        <td><strong>0.30</strong></td>
+                        <td><strong>0.25</strong></td>
+                        <td><strong>2.8</strong></td>
+                        <td class="positive"><strong>+20.0%</strong></td>
+                        <td><strong>100.0%</strong></td>
+                    </tr>
+                    <tr>
+                        <td>一般化学品</td>
+                        <td>0.18</td>
+                        <td>0.15</td>
+                        <td>1.5</td>
+                        <td class="positive">+20.0%</td>
+                        <td>60.0%</td>
+                    </tr>
+                    <tr>
+                        <td>危险化学品</td>
+                        <td>0.08</td>
+                        <td>0.06</td>
+                        <td>0.7</td>
+                        <td class="positive">+33.3%</td>
+                        <td>26.7%</td>
+                    </tr>
+                    <tr>
+                        <td>管制化学品</td>
+                        <td>0.04</td>
+                        <td>0.04</td>
+                        <td>0.4</td>
+                        <td>0.0%</td>
+                        <td>13.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- 供应商分析 -->
+            <h4 class="sub-chart-title">供应商分析</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>供应商名称</th>
+                        <th>合作年限</th>
+                        <th>供应种类数</th>
+                        <th>供应金额(万元)</th>
+                        <th>供应占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>国药集团化学试剂有限公司</td>
+                        <td>5年</td>
+                        <td>45</td>
+                        <td>0.15</td>
+                        <td>50.0%</td>
+                    </tr>
+                    <tr>
+                        <td>西陇科学股份有限公司</td>
+                        <td>3年</td>
+                        <td>28</td>
+                        <td>0.08</td>
+                        <td>26.7%</td>
+                    </tr>
+                    <tr>
+                        <td>阿拉丁试剂有限公司</td>
+                        <td>2年</td>
+                        <td>16</td>
+                        <td>0.07</td>
+                        <td>23.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 报告结束 -->
+    <div class="page content-page page-break" id="report-end">
+        <div style="text-align: center; padding: 100px 0;">
+            <h2 style="color: #1e1b4b; margin-bottom: 30px;">报告结束</h2>
+            <p style="color: #64748b; font-size: 16px; margin-bottom: 20px;">感谢阅读化学学院化学品月报</p>
+            <p style="color: #64748b; font-size: 14px;">如有疑问，请联系实验室安全管理员</p>
+            <div style="margin-top: 50px; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 12px; margin: 0;">
+                    <strong>报告生成系统：</strong>小来实验室 LabVision<br>
+                    <strong>生成时间：</strong>2024年12月31日<br>
+                    <strong>报告版本：</strong>v1.0
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

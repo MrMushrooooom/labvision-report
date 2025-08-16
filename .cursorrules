@@ -1,0 +1,435 @@
+# 高校实验室管理平台数据报告项目规则
+
+## 项目概述
+生成高校实验室管理平台数据报告的HTML项目，用于转换为PDF格式。
+
+## 核心技术规范
+
+### HTML+CSS要求
+- 只能使用纯HTML + CSS，不能使用任何框架
+- CSS样式直接写在HTML文件内（内联或<style>标签）
+- 每个报告对应一个独立的HTML文件
+
+### Java框架兼容性要求 ⚠️
+**重要：所有HTML必须兼容iText7和FreeMarker框架，禁止使用以下CSS属性：**
+
+#### 禁止使用的Flexbox属性 ❌
+- `display: flex` → 使用 `display: block` 或 `inline-block`
+- `flex-direction: column` → 使用 `vertical-align: top` 和 `margin-bottom`
+- `justify-content`, `align-items` → 使用 `text-align: center` 和 `margin: 0 auto`
+- `flex: 1` → 使用固定宽度或百分比
+- `gap: Xpx` → 使用 `margin` 和 `padding` 控制间距
+
+#### 禁止使用的Grid属性 ❌
+- `display: grid` → 使用 `display: block` 和 `text-align: center`
+- `grid-template-columns` → 使用 `display: inline-block` 和 `width: X%`
+
+#### 推荐使用的兼容属性 ✅
+- `display: block`, `inline-block`
+- `text-align: center`, `left`, `right`
+- `position: relative`, `absolute`
+- `margin`, `padding`
+- `vertical-align: top`, `middle`
+
+### 成功经验总结
+基于化学品月报-校级.html的成功实践，本规则文件提供了完整的HTML报告生成模板，包括：
+- 专业的封面页设计（深蓝色背景，固定A4尺寸）
+- 清晰的目录页布局
+- 多种图表实现方案（饼图、折线图、柱状图、数据表格）
+- 优化的打印样式，确保PDF转换成功
+- 完整的CSS样式库，可直接复制使用
+
+## 成功报告模板结构
+
+### 核心CSS样式
+```css
+/* 页面基础设置 */
+@page { size: A4; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", "SimSun", Arial, sans-serif; line-height: 1.6; color: #333; font-size: 14px; }
+.page { page-break-after: always; min-height: 100vh; padding: 2cm; position: relative; }
+
+/* 封面页 - 固定A4高度，深蓝色背景 */
+.cover-page { height: 297mm; padding: 20mm; background: #0a0f1a; color: #fff; text-align: center; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden; }
+.cover-title { font-size: 72px; font-weight: 800; margin-bottom: 20px; letter-spacing: 12px; color: #ffffff; }
+.cover-subtitle { font-size: 28px; margin-bottom: 24px; font-weight: 300; letter-spacing: 3px; color: rgba(255, 255, 255, 0.8); }
+
+/* 目录页 */
+.toc-page { background: #ffffff; padding: 1.5cm 2cm; height: 100vh; text-align: center; page-break-after: always; }
+.toc-title { font-size: 22px; font-weight: 700; color: #1e1b4b; margin-bottom: 20px; }
+.toc-list { max-width: 480px; margin: 0 auto; text-align: left; padding-top: 10px; }
+
+/* 内容页 */
+.content-page { background: white; }
+.section-title { font-size: 24px; font-weight: bold; color: #1e1b4b; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #4338ca; }
+.chart-container { background: white; padding: 30px; border-radius: 12px; margin-bottom: 35px; border: 2px solid #e2e8f0; }
+.chart-title { font-size: 20px; font-weight: 600; color: #1e1b4b; margin-bottom: 25px; text-align: center; padding: 16px 24px; background: #f8fafc; border-radius: 12px; border: 2px solid #e2e8f0; }
+```
+
+### 5. 图表实现最佳实践
+
+#### 核心图表类型
+- **饼图**：使用SVG `<polyline>` 绘制圆弧，兼容性最好
+- **折线图**：使用SVG `<path>` 绘制平滑曲线，`<circle>` 标记数据点
+- **柱状图**：使用 `display: inline-block` 布局，支持动态宽度
+- **数据表格**：标准HTML表格，支持样式定制
+
+#### 关键样式类
+```css
+/* 饼图容器 */
+.pie-charts-container { text-align: center; margin: 25px 0; padding: 20px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; }
+.pie-chart-wrapper { text-align: center; width: 240px; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; display: inline-block; vertical-align: top; }
+
+/* 折线图 */
+.trend-chart { position: relative; height: 400px; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+.trend-svg { width: 100%; height: 300px; display: block; margin: 0 auto; }
+
+/* 柱状图 */
+.bar-chart { height: auto; min-height: 300px; padding: 20px 0; position: relative; text-align: center; }
+.bar { height: 25px; border-radius: 4px; position: relative; text-align: right; padding-right: 8px; font-size: 12px; color: white; font-weight: 500; min-width: 40px; line-height: 25px; }
+
+/* 数据表格 */
+.data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; }
+.data-table th { background: #f1f5f9; font-weight: bold; color: #1e1b4b; }
+.data-table .total-row { background-color: #1e40af !important; color: white; font-weight: bold; }
+```
+
+### 6. 样式类定义
+
+#### 核心样式类
+```css
+/* 饼图容器 */
+.pie-charts-container { text-align: center; margin: 25px 0; padding: 20px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; }
+.pie-chart-wrapper { text-align: center; width: 240px; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; display: inline-block; vertical-align: top; }
+.pie-chart-title { font-size: 14px; font-weight: 600; color: white; margin-bottom: 20px; padding: 8px 12px; background: #4338ca; border-radius: 8px; line-height: 1.3; white-space: nowrap; }
+```
+
+/* 折线图 */
+.trend-chart { position: relative; height: 400px; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; overflow: visible !important; }
+.trend-svg { width: 100%; height: 300px; display: block; margin: 0 auto; position: relative; overflow: visible !important; padding: 20px; box-sizing: border-box; }
+
+/* 柱状图 */
+.bar-chart { height: auto; min-height: 300px; padding: 20px 0; position: relative; text-align: center; }
+.bar-group { margin-bottom: 15px; text-align: center; }
+.bar-label { width: 80px; font-size: 14px; color: #64748b; text-align: right; font-weight: 500; }
+.bar { height: 25px; border-radius: 4px; position: relative; text-align: right; padding-right: 8px; font-size: 12px; color: white; font-weight: 500; min-width: 40px; line-height: 25px; }
+.bar-weight { background: #4338ca; }
+.bar-volume { background: #7c3aed; }
+
+/* 数据表格 */
+.data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; }
+.data-table th { background: #f1f5f9; font-weight: bold; color: #1e1b4b; border: 1px solid #e2e8f0; }
+.data-table tr:nth-child(even) { background: #f8fafc; }
+.data-table .total-row { background-color: #1e40af !important; color: white; font-weight: bold; }
+```
+
+### 7. 打印样式优化
+```css
+@media print {
+    .cover-page { height: 297mm !important; padding: 20mm !important; background: #0a0f1a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; page-break-after: always !important; page-break-inside: avoid !important; }
+    .cover-background, .cover-pattern, .cover-gradient { display: none !important; }
+    .toc-page { height: 100vh !important; page-break-after: always !important; }
+    .content-page { page-break-before: always; }
+    
+    /* 折线图打印样式 - 防止跑偏 */
+    .trend-chart, .trend-svg { position: relative !important; overflow: visible !important; page-break-inside: avoid !important; }
+    .trend-svg, .trend-svg svg, .trend-lines, .trend-point { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; max-width: 100% !important; height: auto !important; }
+}
+```
+
+### 8. 专业配色方案
+```css
+:root {
+    --primary-color: #1e1b4b;      /* 深蓝色 - 主标题 */
+    --secondary-color: #4338ca;     /* 深紫色 - 强调色 */
+    --accent-color: #60a5fa;        /* 亮蓝色 - 装饰线 */
+    --text-primary: #1e1b4b;        /* 主要文字 */
+    --text-secondary: #374151;       /* 次要文字 */
+    --background-light: #f8fafc;     /* 浅色背景 */
+    --border-color: #e2e8f0;         /* 边框颜色 */
+    --success-color: #16a34a;        /* 成功色 */
+    --warning-color: #dc2626;        /* 警告色 */
+}
+```
+
+### 9. 完整HTML结构模板
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报告标题</title>
+    <style>
+        /* 复制上面的CSS样式 */
+    </style>
+</head>
+<body>
+    <!-- 封面页 -->
+    <div class="page cover-page">
+        <div class="cover-header">
+            <div class="brand-section">
+                <div class="brand-name">小来实验室</div>
+                <div class="brand-english">LabVision</div>
+            </div>
+        </div>
+        
+        <div class="cover-main">
+            <div class="title-section">
+                <h1 class="cover-title">报告标题</h1>
+                <h2 class="cover-subtitle">Report Title</h2>
+                <p class="cover-description">报告描述</p>
+            </div>
+        </div>
+        
+        <div class="cover-footer">
+            <div class="cover-info">
+                <div class="info-item">
+                    <span class="info-label">报告时间</span>
+                    <span class="info-value">2024年12月</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 目录页 -->
+    <div class="page toc-page">
+        <h1 class="toc-title">目录</h1>
+        <div class="toc-list">
+            <!-- 目录项 -->
+        </div>
+    </div>
+    
+    <!-- 内容页 -->
+    <div class="page content-page">
+        <h2 class="section-title">章节标题</h2>
+        <div class="chart-container">
+            <h3 class="chart-title">图表标题</h3>
+            <!-- 图表内容 -->
+        </div>
+    </div>
+</body>
+</html>
+```
+
+## PDF生成优化规范
+
+### 页面结构要求
+- **第一页必须是封面页**：报告标题、机构信息、报告期间
+- **第二页必须是目录页**：清晰列出各章节和页码
+- 每页内容完整，避免跨页断行
+- 使用 `page-break-after: always` 控制分页
+
+### 样式优化要求
+- 使用适合打印的字体（宋体、黑体、微软雅黑）
+- 避免使用渐变、阴影等复杂CSS效果
+- 确保黑白打印时图表和文字清晰可辨
+- 页面边距统一，适合A4纸张打印
+
+### 打印样式要求
+```css
+@media print {
+    .cover-page, .toc-page {
+        height: 100vh !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+    }
+    .content-page {
+        page-break-before: always;
+    }
+    
+    /* 确保图表在打印时清晰可见 */
+    .chart-container {
+        page-break-inside: avoid;
+    }
+    
+    /* 优化打印颜色 */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
+```
+
+## 专业报告设计风格
+
+### 设计原则
+- 简洁、大气、专业的视觉设计
+- 深色主题配色方案（深蓝、深紫、深绿）
+- 图表设计简洁明了，数据突出
+- 字体层次分明，标题、正文、注释区分明确
+- 页面布局平衡，留白合理
+
+### 推荐配色方案
+```css
+:root {
+    --primary-color: #1976D2;      /* 深蓝色 */
+    --secondary-color: #388E3C;    /* 深绿色 */
+    --accent-color: #7B1FA2;       /* 深紫色 */
+    --text-primary: #212121;       /* 主要文字 */
+    --text-secondary: #757575;     /* 次要文字 */
+    --background-light: #FAFAFA;   /* 浅色背景 */
+    --border-color: #E0E0E0;       /* 边框颜色 */
+}
+```
+
+### 禁止使用 ❌
+- 任何动画效果和过渡动画
+- 复杂的CSS3特效
+- 不兼容Java框架的CSS属性
+
+## 报告生成规则
+
+### 通用规则
+- 所有报告均为平台自动生成
+- 数据来源：平台实际业务数据，不添加虚构维度
+- 只包含平台实际能获取的数据维度
+
+### 化学品相关规则
+- 物理状态：仅考虑固体和液体
+- 计量单位：固体使用kg，液体使用L
+- 单位换算：1千升 = 1吨（计算总量时）
+
+## 项目结构
+```
+labvision-report/
+├── .cursorrules                    # 项目规则文件
+├── docs/                          # 报告结构设计文档
+├── reports/                       # 生成的HTML报告文件
+└── assets/                        # 静态资源文件
+```
+
+## 开发流程
+1. 创建报告结构设计文档（.md格式）
+2. 讨论和完善报告内容维度、排版设计风格
+3. 生成对应的HTML报告，确保Java框架兼容性
+4. 优化PDF生成效果，确保封面、目录、分页结构完整
+
+## 报告类型
+1. 安全检查任务报告
+2. 分级分类评估任务报告
+3. 化学品月报（校级和学院级）
+4. 设备开放共享月报（校级和学院级）
+
+## 常见问题解决方案
+
+### 图表显示问题
+- **饼图不显示**：检查 `conic-gradient` 语法，确保角度计算正确
+- **柱状图重叠**：调整 `margin` 和 `width` 值，确保有足够间距
+- **折线图断线**：检查SVG `viewBox` 和坐标值是否匹配
+
+### PDF转换问题
+- **页面断行错误**：使用 `page-break-inside: avoid` 保护重要内容
+- **字体显示异常**：确保使用系统默认字体或嵌入字体
+- **图表颜色丢失**：添加 `color-adjust: exact` 样式
+
+### 布局兼容问题
+- **元素错位**：避免使用 `position: fixed`，优先使用 `relative` 和 `absolute`
+- **宽度计算错误**：使用百分比或固定像素值，避免 `calc()` 函数
+- **垂直对齐问题**：使用 `vertical-align` 和 `line-height` 控制
+
+## 性能优化建议
+
+### 代码优化
+- 合并重复的CSS规则
+- 使用CSS类选择器，避免过度嵌套
+- 减少不必要的HTML标签
+
+### 文件优化
+- 压缩HTML文件大小
+- 优化图片资源
+- 使用CDN加载外部资源（如果允许）
+
+## 测试验证清单
+
+### 兼容性测试
+- [ ] 在Chrome、Firefox、Safari中正常显示
+- [ ] 使用iText7成功转换为PDF
+- [ ] 使用FreeMarker模板引擎正常渲染
+
+### 打印测试
+- [ ] 页面分页正确
+- [ ] 图表在黑白打印时清晰可见
+- [ ] 字体大小适合阅读
+
+### 内容验证
+- [ ] 数据计算准确
+- [ ] 图表比例正确
+- [ ] 文字内容完整
+
+## 核心要求总结
+- ✅ **Java框架兼容**：禁止使用Flexbox、Grid等不兼容属性
+- ✅ **PDF优化**：封面页+目录页+分页控制
+- ✅ **专业设计**：简洁大气，无动画效果
+- ✅ **数据真实**：只包含平台实际数据维度
+- ✅ **样式复用**：现有样式可给其他报告使用
+- ✅ **代码质量**：清晰、可维护、性能优化
+- ✅ **测试完善**：兼容性、打印效果、内容准确性
+
+## 常见问题解决方案
+
+### 图表显示问题
+- **饼图不显示**：检查 `conic-gradient` 语法，确保角度计算正确
+- **柱状图重叠**：调整 `margin` 和 `width` 值，确保有足够间距
+- **折线图断线**：检查SVG `viewBox` 和坐标值是否匹配
+
+### PDF转换问题
+- **页面断行错误**：使用 `page-break-inside: avoid` 保护重要内容
+- **字体显示异常**：确保使用系统默认字体或嵌入字体
+- **图表颜色丢失**：添加 `color-adjust: exact` 样式
+
+## 快速开始模板
+
+### 基础HTML结构
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报告标题</title>
+    <style>
+        /* 在这里添加CSS样式 */
+    </style>
+</head>
+<body>
+    <!-- 封面页 -->
+    <div class="cover-page">
+        <!-- 封面内容 -->
+    </div>
+    
+    <!-- 目录页 -->
+    <div class="toc-page">
+        <!-- 目录内容 -->
+    </div>
+    
+    <!-- 内容页 -->
+    <div class="content-page">
+        <!-- 报告内容 -->
+    </div>
+</body>
+</html>
+```
+
+## 快速开始指南
+
+### 使用步骤
+1. **复制HTML框架**：使用上面的"完整HTML结构模板"
+2. **复制CSS样式**：将上面的CSS样式复制到`<style>`标签中
+3. **修改内容**：替换标题、数据、图表等内容
+4. **测试转换**：使用iText7测试PDF转换效果
+
+### 关键成功要素
+- ✅ **封面页**：`.cover-page`类，高度297mm，深蓝色背景
+- ✅ **目录页**：`.toc-page`类，清晰的目录结构
+- ✅ **内容页**：`.content-page`类，每个章节独立容器
+- ✅ **图表容器**：`.chart-container`包装所有图表
+- ✅ **打印样式**：完整的`@media print`样式
+
+### 常见问题解决
+- **PDF转换失败**：检查是否使用了禁止的CSS属性（flex、grid等）
+- **页面断行错误**：确保使用了正确的`page-break-*`属性
+- **图表显示异常**：优先使用SVG方式实现图表
+- **字体显示问题**：使用系统默认字体

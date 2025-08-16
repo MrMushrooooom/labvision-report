@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>测试修复</title>
+    <style>
+        /* 修复前的问题CSS - 这些应该不会在iText中工作 */
+        .old-repeating-gradient {
+            background: repeating-linear-gradient(
+                to right,
+                #d1d5db 0,
+                #d1d5db 2px,
+                transparent 2px,
+                transparent 6px
+            );
+        }
+        
+        .old-percent-positioning {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* 修复后的CSS - 这些应该能在iText中工作 */
+        .new-dotted-line {
+            border-bottom: 1px dotted #d1d5db;
+        }
+        
+        .new-centered {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS兼容性测试</h1>
+    <p>如果这个文件可以正常转换为PDF，说明修复成功。</p>
+    
+    <div class="new-dotted-line" style="width: 200px; height: 1px; margin: 20px 0;"></div>
+    
+    <div style="position: relative; height: 50px;">
+        <div class="new-centered" style="width: 100px; height: 20px; background: #4338ca;">居中元素</div>
+    </div>
+</body>
+</html>

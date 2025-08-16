@@ -1,0 +1,28 @@
+# Java编译文件
+*.class
+*.jar
+target/
+build/
+
+# PDF输出文件
+*.pdf
+output/
+
+# IDE文件
+.vscode/
+.idea/
+*.iml
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 测试输出
+test_output_*.txt

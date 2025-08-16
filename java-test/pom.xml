@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.labvision</groupId>
+    <artifactId>html-to-pdf-test</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>HTML to PDF Test</name>
+    <description>测试HTML转PDF功能的项目</description>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- iText7 核心模块 -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>7.1.16</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>7.1.16</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>7.1.16</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>styled-xml-parser</artifactId>
+            <version>7.1.16</version>
+        </dependency>
+        
+                            <dependency>
+                        <groupId>com.itextpdf</groupId>
+                        <artifactId>html2pdf</artifactId>
+                        <version>2.1.7</version>
+                    </dependency>
+        
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>font-asian</artifactId>
+            <version>7.1.16</version>
+        </dependency>
+
+        <!-- FreeMarker 模板引擎 -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.23</version>
+        </dependency>
+
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
+</project>
