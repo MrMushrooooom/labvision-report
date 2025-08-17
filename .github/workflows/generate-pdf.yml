@@ -1,0 +1,101 @@
+name: Generate PDF Reports
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'reports/*.html' ]
+  workflow_dispatch:
+    inputs:
+      force_regenerate:
+        description: 'Force regenerate all PDFs'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  generate-pdf:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        run: |
+          cd java-test
+          mvn clean compile
+          mvn dependency:copy-dependencies
+
+      - name: Generate PDF reports
+        run: |
+          cd java-test
+          echo "Starting PDF generation..."
+          
+          # 批量转换所有HTML文件
+          for html_file in ../reports/*.html; do
+            if [ -f "$html_file" ]; then
+              filename=$(basename "$html_file" .html)
+              echo "Converting $filename.html to PDF..."
+              mvn exec:java -Dexec.mainClass="RealHtmlToPdfConverter" -Dexec.args="$html_file"
+              
+              # 检查是否生成成功
+              if [ -f "output/$filename.pdf" ]; then
+                echo "✅ Successfully generated $filename.pdf"
+              else
+                echo "❌ Failed to generate $filename.pdf"
+                exit 1
+              fi
+            fi
+          done
+          
+          echo "All PDFs generated successfully!"
+
+      - name: List generated files
+        run: |
+          cd java-test
+          echo "Generated PDF files:"
+          ls -la output/*.pdf
+          echo "Total files: $(ls output/*.pdf | wc -l)"
+
+      - name: Upload PDF artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-reports-${{ github.run_number }}
+          path: java-test/output/*.pdf
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Success notification
+        if: success()
+        run: |
+          echo "🎉 PDF generation completed successfully!"
+          echo "📊 Generated files:"
+          cd java-test && ls -la output/*.pdf
+          echo "📥 Download from GitHub Actions Artifacts"
+
+      - name: Handle build failure
+        if: failure()
+        run: |
+          echo "❌ PDF generation failed!"
+          echo "🔍 Check the logs above for details"
+          echo "💡 Common issues:"
+          echo "   - HTML syntax errors"
+          echo "   - CSS compatibility issues"
+          echo "   - Font loading problems"
+          exit 1
