@@ -1,166 +1,193 @@
-# 高校实验室管理平台数据报告项目
+# 高校实验室管理平台数据报告生成器
 
-## 项目概述
+## 项目简介
 
-本项目是一个专业的高校实验室管理平台数据报告生成系统，用于生成高质量的HTML报告并转换为PDF格式。项目专注于实验室设备开放共享、化学品管理、安全检查等核心业务领域的数据分析和报告生成。
+LabVision Report Generator 是一个专为高校实验室管理平台设计的数据报告自动生成工具。它能够将HTML格式的报告模板转换为高质量的PDF文档，支持多种图表类型和数据可视化。
 
-## 核心特性
+## 主要功能
 
-### 🎯 专业报告类型
-- **安全检查任务报告** - 实验室安全检查和任务完成情况
-- **分级分类评估任务报告** - 化学品分级分类评估分析
-- **化学品月报** - 校级和学院级化学品管理月度报告
-- **设备开放共享月报** - 校级和学院级设备开放共享月度报告
+- 📊 **多种图表支持**：饼图、折线图、柱状图、数据表格
+- 🎨 **专业设计风格**：简洁大气的视觉设计，适合正式报告
+- 🔄 **自动化流程**：支持GitHub Actions自动生成报告
+- 📱 **响应式布局**：兼容多种设备和打印需求
+- 🌏 **中文支持**：完整的中文字体和排版支持
 
-### 🎨 专业设计风格
-- 深色主题配色方案（深蓝、深紫、深绿）
-- 专业的封面页设计（深蓝色背景，固定A4尺寸）
-- 清晰的目录页布局
-- 多种图表实现方案（饼图、折线图、柱状图、数据表格）
+## 技术架构
 
-### 🔧 技术特点
-- **纯HTML + CSS** - 无框架依赖，确保最大兼容性
-- **iText7兼容** - 完美支持Java框架的PDF转换
-- **FreeMarker兼容** - 支持模板引擎渲染
-- **响应式设计** - 适配不同设备和打印需求
+### 核心技术栈
+- **Java 17+**：主要开发语言
+- **iText7**：PDF生成引擎
+- **Maven**：项目构建和依赖管理
+- **HTML5 + CSS3**：报告模板
+- **SVG**：矢量图表绘制
+
+### 架构特点
+- 纯HTML + CSS实现，无JavaScript依赖
+- 兼容iText7和FreeMarker框架
+- 支持A4纸张打印优化
+- 模块化设计，易于扩展
 
 ## 项目结构
 
 ```
 labvision-report/
-├── .cursorrules                    # 项目规则文件
-├── .gitignore                     # Git忽略文件
-├── README.md                      # 项目说明文档
-├── AGENTS.md                      # 代理说明文档
-├── docs/                          # 报告结构设计文档
-│   ├── 安全检查任务报告.md
-│   ├── 分级分类评估任务报告.md
-│   ├── 化学品月报-校级.md
-│   ├── 化学品月报-学院级.md
-│   ├── 设备开放共享月报-校级.md
-│   └── 设备开放共享月报-学院级.md
-├── reports/                       # 生成的HTML报告文件
+├── README.md                    # 项目说明文档
+├── .cursorrules                 # AI开发规范
+├── docs/                        # 报告结构设计文档
+├── reports/                     # HTML报告模板
 │   ├── 化学品月报-校级.html
 │   ├── 化学品月报-学院级.html
-│   ├── 设备开放共享月报-校级.html
-│   └── 设备开放共享月报-学院级.html
-├── assets/                        # 静态资源文件
-│   ├── icons/                     # 图标文件
-│   └── images/                    # 图片文件
-└── java-test/                     # Java PDF转换测试代码
-    ├── src/                       # 源代码
-    ├── lib/                       # 依赖库
-    ├── target/                    # 编译输出
-    └── output/                    # PDF输出目录
+│   └── ...
+├── java-test/                   # Java转换程序
+│   ├── src/main/java/          # 源代码
+│   ├── pom.xml                 # Maven配置
+│   └── output/                 # 生成的PDF文件
+└── assets/                      # 静态资源文件
 ```
-
-## 技术规范
-
-### HTML+CSS要求
-- 只能使用纯HTML + CSS，不能使用任何框架
-- CSS样式直接写在HTML文件内（内联或<style>标签）
-- 每个报告对应一个独立的HTML文件
-
-### Java框架兼容性要求
-**重要：所有HTML必须兼容iText7和FreeMarker框架，禁止使用以下CSS属性：**
-
-#### 禁止使用的Flexbox属性 ❌
-- `display: flex` → 使用 `display: block` 或 `inline-block`
-- `flex-direction: column` → 使用 `vertical-align: top` 和 `margin-bottom`
-- `justify-content`, `align-items` → 使用 `text-align: center` 和 `margin: 0 auto`
-- `flex: 1` → 使用固定宽度或百分比
-- `gap: Xpx` → 使用 `margin` 和 `padding` 控制间距
-
-#### 禁止使用的Grid属性 ❌
-- `display: grid` → 使用 `display: block` 和 `text-align: center`
-- `grid-template-columns` → 使用 `display: inline-block` 和 `width: X%`
-
-#### 推荐使用的兼容属性 ✅
-- `display: block`, `inline-block`
-- `text-align: center`, `left`, `right`
-- `position: relative`, `absolute`
-- `margin`, `padding`
-- `vertical-align: top`, `middle`
 
 ## 快速开始
 
-### 1. 克隆项目
+### 环境要求
+- Java 17 或更高版本
+- Maven 3.6 或更高版本
+- 支持中文的操作系统
+
+### 安装步骤
+
+1. **克隆项目**
 ```bash
-git clone https://github.com/yourusername/labvision-report.git
+git clone https://github.com/your-username/labvision-report.git
 cd labvision-report
 ```
 
-### 2. 查看报告
-- 打开 `reports/` 目录下的HTML文件
-- 使用浏览器查看报告效果
-
-### 3. 生成PDF（需要Java环境）
+2. **编译项目**
 ```bash
 cd java-test
-./compile-and-run.sh
+mvn clean compile
 ```
 
-## 报告生成流程
+3. **生成PDF报告**
+```bash
+mvn exec:java -Dexec.mainClass="RealHtmlToPdfConverter" -Dexec.args="../reports/化学品月报-学院级.html"
+```
 
-### 1. 设计报告结构
-- 在 `docs/` 目录下创建Markdown格式的报告结构文档
-- 定义报告章节、数据维度、图表类型等
+### 输出结果
+- 生成的PDF文件保存在 `java-test/output/` 目录
+- 支持批量转换多个HTML文件
+- 自动处理中文字体和图表渲染
 
-### 2. 生成HTML报告
-- 基于Markdown文档创建HTML报告
-- 使用项目提供的CSS样式库
-- 确保iText7兼容性
+## 报告类型
 
-### 3. 转换为PDF
-- 使用Java程序将HTML转换为PDF
-- 支持中文字体和专业排版
+### 已支持的报告
+- **化学品月报**：校级和学院级版本
+- **安全检查任务报告**
+- **分级分类评估任务报告**
+- **设备开放共享月报**
 
-## 成功案例
+### 报告特点
+- 专业的封面页设计
+- 清晰的目录结构
+- 多种图表展示方式
+- 优化的打印样式
 
-### 化学品月报-校级
-- ✅ 成功实现多色饼图（使用SVG polyline）
-- ✅ 完整的封面页、目录页、分页控制
-- ✅ 成功转换为PDF，图表显示正常
+## 图表实现
 
-### 设备开放共享月报
-- ✅ 校级版本：包含学院对比分析
-- ✅ 学院级版本：专注校内校外对比
-- ✅ 支持多种图表类型和数据分析
+### 支持图表类型
+- **饼图**：使用SVG polyline绘制，兼容性最佳
+- **折线图**：SVG path绘制平滑曲线，支持数据点标记
+- **柱状图**：CSS布局实现，支持动态宽度
+- **数据表格**：标准HTML表格，样式可定制
+
+### 图表设计原则
+- 简洁明了的视觉设计
+- 适合黑白打印的配色方案
+- 响应式布局，支持多种尺寸
+- 无动画效果，确保PDF兼容性
+
+## 自动化部署
+
+### GitHub Actions
+项目支持GitHub Actions自动生成PDF报告：
+
+1. **触发条件**：HTML文件更新时自动触发
+2. **构建环境**：Java 17 + Maven环境
+3. **输出结果**：PDF文件保存为GitHub Artifacts
+4. **下载方式**：通过GitHub Actions页面下载
+
+### 工作流程
+```yaml
+name: Generate PDF Reports
+on:
+  push:
+    paths: ['reports/**/*.html']
+jobs:
+  generate-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+      - run: mvn clean compile
+      - run: mvn exec:java -Dexec.mainClass="RealHtmlToPdfConverter" -Dexec.args="reports/*.html"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pdf-reports
+          path: output/*.pdf
+```
+
+## 开发指南
+
+### 添加新报告
+1. 在 `docs/` 目录创建报告设计文档
+2. 在 `reports/` 目录创建HTML模板
+3. 遵循现有的图表实现标准
+4. 测试PDF转换效果
+
+### 自定义图表
+- 参考现有图表的CSS样式
+- 使用兼容的SVG属性
+- 避免使用Flexbox和Grid布局
+- 确保打印样式正确
+
+## 常见问题
+
+### PDF转换问题
+- **图表显示异常**：检查CSS兼容性，避免使用不支持的属性
+- **中文字体缺失**：确保字体文件正确加载
+- **页面断行错误**：使用正确的分页控制属性
+
+### 性能优化
+- 合并重复的CSS规则
+- 优化图片资源大小
+- 减少不必要的HTML标签
 
 ## 贡献指南
 
-### 开发流程
-1. Fork项目到你的GitHub账户
-2. 创建功能分支：`git checkout -b feature/new-report`
-3. 提交更改：`git commit -am 'Add new report type'`
-4. 推送分支：`git push origin feature/new-report`
-5. 创建Pull Request
+欢迎提交Issue和Pull Request！
+
+### 贡献流程
+1. Fork项目
+2. 创建功能分支
+3. 提交代码变更
+4. 创建Pull Request
 
 ### 代码规范
-- 遵循项目的HTML+CSS兼容性要求
-- 确保所有报告都能成功转换为PDF
-- 保持专业的视觉设计风格
-- 添加适当的注释和文档
+- 遵循现有的代码风格
+- 确保PDF转换兼容性
+- 添加必要的注释说明
+- 测试所有功能正常
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ## 联系方式
 
-- **项目维护者**：小来实验室团队
-- **项目名称**：LabVision
-- **项目地址**：https://github.com/yourusername/labvision-report
-
-## 更新日志
-
-### v1.0.0 (2024-12-31)
-- ✨ 初始版本发布
-- ✨ 支持4种主要报告类型
-- ✨ 完整的HTML+CSS样式库
-- ✨ Java PDF转换支持
-- ✨ 专业的报告设计模板
+- 项目主页：[GitHub Repository](https://github.com/your-username/labvision-report)
+- 问题反馈：[Issues](https://github.com/your-username/labvision-report/issues)
+- 功能建议：[Discussions](https://github.com/your-username/labvision-report/discussions)
 
 ---
 
-**小来实验室 LabVision** - 专业的实验室管理解决方案
+**LabVision Report Generator** - 让数据报告生成变得简单高效 🚀

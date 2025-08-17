@@ -14,8 +14,8 @@
     <description>高校实验室管理平台数据报告HTML转PDF转换器</description>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <itext.version>7.1.16</itext.version>
         <html2pdf.version>2.1.7</html2pdf.version>

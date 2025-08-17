@@ -85,33 +85,25 @@
 
             .trend-svg {
                 position: relative !important;
-                left: 0 !important;
-                top: 0 !important;
                 transform: none !important;
                 max-width: 100% !important;
-                height: auto !important;
+                height: 300px !important;
             }
 
             .trend-svg svg {
                 position: relative !important;
-                left: 0 !important;
-                top: 0 !important;
                 transform: none !important;
                 max-width: 100% !important;
-                height: auto !important;
+                height: 300px !important;
             }
 
             .trend-lines {
                 position: relative !important;
-                left: 0 !important;
-                top: 0 !important;
                 transform: none !important;
             }
 
             .trend-point {
                 position: relative !important;
-                left: 0 !important;
-                top: 0 !important;
                 transform: none !important;
             }
         }
@@ -431,13 +423,15 @@
         /* 趋势图表样式 */
         .trend-chart {
             position: relative;
-            height: 400px;
             margin: 30px 0;
             padding: 20px;
             background: #f8fafc;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
             overflow: visible !important;
+            clear: both;
+            display: block;
+            page-break-inside: avoid;
         }
 
         .chart-legend {
@@ -446,15 +440,30 @@
             text-align: center;
         }
 
+        .legend-item {
+            display: inline-block;
+            margin: 0 10px;
+            vertical-align: middle;
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid #e2e8f0;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
         .trend-svg {
-            width: 100%;
-            height: 300px;
             display: block;
             margin: 0 auto;
             position: relative;
             overflow: visible !important;
-            padding: 20px;
-            box-sizing: border-box;
         }
 
         .trend-svg text {
@@ -1035,30 +1044,29 @@
         <div class="chart-container">
             <h3 class="chart-title">近12个月总库存量趋势变化</h3>
             <div class="trend-chart">
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #1e40af;"></div>
-                        <span>总量</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #7c3aed;"></div>
-                        <span>一般化学品</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #dc2626;"></div>
-                        <span>危险化学品</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #ea580c;"></div>
-                        <span>管制品</span>
-                    </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #1e40af;"></div>
+                    <span>总量</span>
                 </div>
-                
-                <svg width="100%" height="300" viewBox="0 0 800 300" class="trend-svg">
-                    <!-- Y轴 -->
-                    <line x1="60" y1="20" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
-                    <!-- X轴 -->
-                    <line x1="60" y1="280" x2="760" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #7c3aed;"></div>
+                    <span>一般化学品</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc2626;"></div>
+                    <span>危险化学品</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ea580c;"></div>
+                    <span>管制品</span>
+                </div>
+            </div>
+            
+                            <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
+                <!-- Y轴 -->
+                <line x1="60" y1="20" x2="60" y2="380" stroke="#e2e8f0" stroke-width="2"/>
+                <!-- X轴 -->
+                <line x1="60" y1="380" x2="760" y2="380" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="50" y="25" text-anchor="end" font-size="12" fill="#64748b">30吨</text>
@@ -1174,7 +1182,7 @@
                     </div>
                 </div>
                 
-                <svg width="100%" height="300" viewBox="0 0 800 300" class="trend-svg">
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- Y轴 -->
                     <line x1="60" y1="20" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     <!-- X轴 -->
