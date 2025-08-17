@@ -41,7 +41,7 @@ public class RealHtmlToPdfConverter {
             pdfFileName = fileName.replace(".html", ".pdf");
         } else {
             // 默认使用学院版报告
-            htmlFilePath = "../reports/04-化学品月报-学院级.html";
+            htmlFilePath = "../reports/化学品月报-学院级.html";
             pdfFileName = "化学品月报-学院级.pdf";
         }
         
@@ -55,8 +55,8 @@ public class RealHtmlToPdfConverter {
             System.out.println("请确保HTML文件路径正确");
             System.out.println("\n使用方法:");
             System.out.println("1. 不传参数（默认转换学院版）: java RealHtmlToPdfConverter");
-            System.out.println("2. 指定文件路径: java RealHtmlToPdfConverter ../reports/04-化学品月报-学院级.html");
-            System.out.println("3. 转换其他文件: java RealHtmlToPdfConverter ../reports/03-化学品月报-校级.html");
+            System.out.println("2. 指定文件路径: java RealHtmlToPdfConverter ../reports/化学品月报-学院级.html");
+            System.out.println("3. 转换其他文件: java RealHtmlToPdfConverter ../reports/化学品月报-校级.html");
             return;
         }
         

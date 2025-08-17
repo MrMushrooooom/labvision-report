@@ -6,17 +6,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.labvision</groupId>
-    <artifactId>html-to-pdf-test</artifactId>
+    <artifactId>html-to-pdf-converter</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>HTML to PDF Test</name>
-    <description>测试HTML转PDF功能的项目</description>
+    <name>HTML to PDF Converter</name>
+    <description>高校实验室管理平台数据报告HTML转PDF转换器</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <itext.version>7.1.16</itext.version>
+        <html2pdf.version>2.1.7</html2pdf.version>
     </properties>
 
     <dependencies>
@@ -24,37 +26,37 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>kernel</artifactId>
-            <version>7.1.16</version>
+            <version>${itext.version}</version>
         </dependency>
         
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>io</artifactId>
-            <version>7.1.16</version>
+            <version>${itext.version}</version>
         </dependency>
         
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>layout</artifactId>
-            <version>7.1.16</version>
+            <version>${itext.version}</version>
         </dependency>
         
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>styled-xml-parser</artifactId>
-            <version>7.1.16</version>
+            <version>${itext.version}</version>
         </dependency>
         
-                            <dependency>
-                        <groupId>com.itextpdf</groupId>
-                        <artifactId>html2pdf</artifactId>
-                        <version>2.1.7</version>
-                    </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>html2pdf</artifactId>
+            <version>${html2pdf.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>font-asian</artifactId>
-            <version>7.1.16</version>
+            <version>${itext.version}</version>
         </dependency>
 
         <!-- FreeMarker 模板引擎 -->
@@ -75,6 +77,7 @@
 
     <build>
         <plugins>
+            <!-- 编译插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -82,9 +85,11 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             
+            <!-- 依赖复制插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -101,6 +106,22 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <!-- 打包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>RealHtmlToPdfConverter</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

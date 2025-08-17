@@ -1,138 +1,197 @@
-# HTML转PDF测试项目
+# HTML转PDF转换器
 
-这是一个用于测试HTML文件转换为PDF兼容性的Java项目。
+## 项目概述
 
-## 项目目标
+这是高校实验室管理平台数据报告的HTML转PDF转换器，基于iText7技术实现，支持中文字体和专业排版。
 
-**主要目标**：确保你的HTML文件可以在同事的Java环境中正常转换为PDF，而不需要他在那边做修复。
+## 功能特性
 
-**工作流程**：
-1. 在我这边运行Java转换程序，生成PDF文件
-2. 查看转换过程中的错误信息
-3. 检查生成的PDF效果
-4. 如果有问题，截图发给我，我来修正HTML文件
+- ✅ **HTML转PDF**：将HTML报告转换为高质量PDF
+- ✅ **中文字体支持**：内置PingFang和思源黑体字体
+- ✅ **专业排版**：支持封面页、目录页、分页控制
+- ✅ **图表兼容**：支持SVG图表和复杂CSS样式
+- ✅ **Maven管理**：标准Maven项目，依赖管理清晰
+
+## 系统要求
+
+- **Java**: JDK 8 或更高版本
+- **Maven**: 3.6.0 或更高版本
+- **操作系统**: Windows, macOS, Linux
+
+## 快速开始
+
+### 1. 安装依赖
+
+#### Mac用户：
+```bash
+# 安装Java
+brew install openjdk@8
+
+# 安装Maven
+brew install maven
+```
+
+#### Ubuntu用户：
+```bash
+# 安装Java
+sudo apt update
+sudo apt install openjdk-8-jdk
+
+# 安装Maven
+sudo apt install maven
+```
+
+#### Windows用户：
+- 下载并安装 [Java JDK](https://adoptium.net/)
+- 下载并安装 [Maven](https://maven.apache.org/download.cgi)
+- 配置环境变量
+
+### 2. 编译项目
+
+```bash
+# 进入项目目录
+cd java-test
+
+# 编译项目
+mvn clean compile
+```
+
+### 3. 运行转换
+
+#### 方法1：使用便捷脚本（推荐）
+```bash
+# 转换默认文件（化学品月报-学院级）
+./run.sh
+
+# 转换指定HTML文件
+./run.sh ../reports/设备开放共享月报-校级.html
+```
+
+#### 方法2：直接使用Java命令
+```bash
+# 转换默认文件
+java -cp "target/classes:target/lib/*" RealHtmlToPdfConverter
+
+# 转换指定文件
+java -cp "target/classes:target/lib/*" RealHtmlToPdfConverter ../reports/设备开放共享月报-校级.html
+```
 
 ## 项目结构
 
 ```
 java-test/
+├── pom.xml                    # Maven配置文件
+├── run.sh                     # 便捷运行脚本
 ├── src/main/java/
-│   ├── SimplePdfTest.java           # 简单测试程序（推荐使用）
-│   ├── HtmlToPdfTest.java           # 基础分析程序
-│   ├── HtmlToPdfConverter.java      # 转换器程序
-│   └── RealHtmlToPdfConverter.java  # 真正的PDF转换器（需要iText7库）
-├── target/                           # 编译输出目录
-├── lib/                              # 依赖库目录
-├── build.xml                         # Ant构建文件
-├── compile-and-run.sh                # 编译运行脚本
-├── download-itext7.sh                # 下载iText7库脚本
-└── README.md                         # 说明文档
+│   └── RealHtmlToPdfConverter.java  # 核心转换器
+├── src/main/resources/
+│   └── fonts/                # 字体资源
+│       ├── Pingfang.ttf      # PingFang字体
+│       └── SubsetOTF/        # 思源黑体字体
+├── target/                    # 编译输出目录
+└── README.md                  # 项目说明文档
 ```
 
-## 快速开始
+## 使用方法
 
-### 方法1：使用简单测试程序（推荐）
+### 基本用法
 
+1. **查看可用的HTML文件**：
+   ```bash
+   ls ../reports/*.html
+   ```
+
+2. **转换默认文件**：
+   ```bash
+   ./run.sh
+   ```
+
+3. **转换指定文件**：
+   ```bash
+   ./run.sh ../reports/化学品月报-校级.html
+   ```
+
+### 输出文件
+
+- **PDF文件位置**: `target/output/` 目录
+- **文件命名**: 自动根据HTML文件名生成PDF文件名
+- **示例**: `化学品月报-校级.html` → `化学品月报-校级.pdf`
+
+## 技术实现
+
+### 核心技术栈
+
+- **iText7**: PDF生成引擎
+- **Html2PDF**: HTML到PDF转换
+- **字体支持**: PingFang + 思源黑体
+- **Maven**: 依赖管理和构建工具
+
+### 依赖版本
+
+- **iText7**: 7.1.16
+- **Html2PDF**: 2.1.7
+- **FreeMarker**: 2.3.23
+- **Java**: 8+
+
+## 故障排除
+
+### 常见问题
+
+#### 1. 编译失败
 ```bash
-# 编译
-javac -d target src/main/java/SimplePdfTest.java
-
-# 运行测试
-java -cp target SimplePdfTest ../reports/03-化学品月报-校级.html ./test_output.pdf
+# 清理并重新编译
+mvn clean compile
 ```
 
-### 方法2：使用Shell脚本
+#### 2. 字体加载失败
+- 确保 `src/main/resources/fonts/` 目录存在
+- 检查字体文件是否完整
 
+#### 3. 依赖下载失败
 ```bash
-# 给脚本执行权限
-chmod +x compile-and-run.sh
-
-# 运行测试
-./compile-and-run.sh
+# 强制更新依赖
+mvn clean compile -U
 ```
 
-### 方法3：使用Ant构建工具
-
+#### 4. 权限问题
 ```bash
-# 编译
-ant compile
-
-# 运行测试
-ant run
+# 给脚本添加执行权限
+chmod +x run.sh
 ```
 
-## 程序功能说明
+### 日志查看
 
-### SimplePdfTest.java（推荐）
-- **功能**：分析HTML兼容性，生成详细报告
-- **优点**：快速、准确、提供具体修复建议
-- **用途**：日常测试和问题诊断
+运行时会显示详细的转换日志，包括：
+- HTML文件检查结果
+- CSS兼容性分析
+- 字体加载状态
+- PDF生成进度
 
-### RealHtmlToPdfConverter.java
-- **功能**：真正的HTML转PDF转换
-- **要求**：需要完整的iText7库
-- **状态**：当前iText7库下载有问题，需要手动配置
+## 开发说明
 
-## 当前状态
+### 添加新的转换功能
 
-✅ **已完成**：
-- HTML兼容性分析
-- CSS属性检查
-- 问题诊断和修复建议
-- 基础测试框架
+1. 在 `RealHtmlToPdfConverter.java` 中添加新方法
+2. 更新 `pom.xml` 添加新依赖（如需要）
+3. 测试新功能
+4. 更新文档
 
-⚠️ **待解决**：
-- iText7库下载问题
-- 真正的PDF转换功能
+### 自定义字体
 
-## 工作流程
+1. 将字体文件放入 `src/main/resources/fonts/` 目录
+2. 在代码中加载新字体
+3. 更新字体提供者配置
 
-### 1. 日常测试流程
-```bash
-# 1. 运行测试程序
-java -cp target SimplePdfTest ../reports/你的文件.html ./output.pdf
+## 许可证
 
-# 2. 查看分析结果
-# 3. 根据建议修复HTML
-# 4. 重新测试验证
-```
+本项目采用 MIT 许可证。
 
-### 2. 问题修复流程
-1. 运行测试程序发现问题
-2. 截图发给我（包含错误信息）
-3. 我分析问题并修复HTML
-4. 你重新测试验证效果
+## 联系方式
 
-### 3. 最终验证流程
-1. 修复所有兼容性问题
-2. 在同事的Java环境中测试
-3. 确认PDF生成正常
+- **项目维护者**: 小来实验室团队
+- **项目名称**: LabVision
+- **技术支持**: 如有问题请提交Issue
 
-## 常见问题
+---
 
-### Q: 为什么不能直接生成PDF？
-A: 当前iText7库下载有问题，需要手动配置。但分析功能完全正常。
-
-### Q: 如何知道HTML是否兼容？
-A: 运行SimplePdfTest程序，它会详细分析并给出建议。
-
-### Q: 发现问题后怎么办？
-A: 截图发给我，我来修复HTML文件。
-
-## 下一步计划
-
-1. **短期**：使用SimplePdfTest分析所有HTML文件
-2. **中期**：解决iText7库问题，实现真正的PDF转换
-3. **长期**：建立完整的测试和修复工作流
-
-## 系统要求
-
-- Java 8 或更高版本
-- 可选：Ant构建工具
-
-## 联系支持
-
-如果遇到问题或需要修复HTML文件，请：
-1. 截图错误信息
-2. 说明具体问题
-3. 我会帮你修复HTML文件
+**小来实验室 LabVision** - 专业的实验室管理解决方案
