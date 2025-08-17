@@ -9,7 +9,7 @@
         @page { size: A4; margin: 0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: "PingFang SC", "Microsoft YaHei", "SimSun", Arial, sans-serif; line-height: 1.6; color: #333; font-size: 14px; }
-        .page { page-break-after: always; min-height: 100vh; padding: 2cm; position: relative; }
+        .page { page-break-after: always; min-height: 100vh; padding: 2cm; position: relative; width: 100%; max-width: 100%; box-sizing: border-box; }
 
         /* 封面页 - 固定A4高度，深蓝色背景 */
         .cover-page { height: 297mm; padding: 20mm; background: #0a0f1a; color: #fff; text-align: center; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden; }
@@ -44,9 +44,9 @@
         .toc-page-number { display: none; }
 
         /* 内容页 */
-        .content-page { background: white; }
+        .content-page { background: white; width: 100%; max-width: 100%; box-sizing: border-box; }
         .section-title { font-size: 24px; font-weight: bold; color: #1e1b4b; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #4338ca; }
-        .chart-container { background: white; padding: 30px; border-radius: 12px; margin-bottom: 35px; border: 2px solid #e2e8f0; }
+        .chart-container { background: white; padding: 30px; border-radius: 12px; margin-bottom: 35px; border: 2px solid #e2e8f0; width: 100%; max-width: 100%; box-sizing: border-box; page-break-inside: avoid; break-inside: avoid; }
         .chart-title { font-size: 20px; font-weight: 600; color: #1e1b4b; margin-bottom: 25px; text-align: center; padding: 16px 24px; background: #f8fafc; border-radius: 12px; border: 2px solid #e2e8f0; }
         .sub-chart-title { font-size: 16px; font-weight: 600; color: #1e1b4b; margin: 30px 0 20px 0; padding: 16px 24px; background: #f8fafc; border-left: 4px solid #4338ca; border-radius: 0 12px 12px 0; border: 1px solid #e2e8f0; position: relative; }
         .sub-chart-title::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #4338ca; border-radius: 0 2px 2px 0; }
@@ -63,11 +63,11 @@
         .none { color: #64748b; font-weight: 600; }
 
         /* 折线图样式 */
-        .trend-chart { position: relative; height: 400px; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; overflow: visible !important; }
+        .trend-chart { position: relative; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; overflow: visible !important; width: 100%; max-width: 100%; box-sizing: border-box; page-break-inside: avoid; break-inside: avoid; }
         .chart-legend { margin-bottom: 20px; font-size: 14px; text-align: center; }
         .legend-item { display: inline-block; margin: 0 10px; vertical-align: middle; }
         .legend-color { width: 20px; height: 20px; border-radius: 3px; display: inline-block; margin-right: 8px; vertical-align: middle; }
-        .trend-svg { width: 100%; height: 300px; display: block; margin: 0 auto; position: relative; overflow: visible !important; padding: 20px; box-sizing: border-box; }
+        .trend-svg { display: block; margin: 0 auto; position: relative; overflow: visible !important; width: 100%; max-width: 100%; }
         .trend-svg text { font-family: Arial, sans-serif; }
         .trend-svg line { stroke-linecap: round; }
         .trend-svg polyline { stroke-linecap: round; stroke-linejoin: round; }
@@ -92,6 +92,9 @@
         .pie-legend .legend-text { display: inline-block; vertical-align: middle; }
         .pie-legend .legend-label { font-size: 14px; color: #374151; font-weight: 500; }
         .pie-legend .legend-value { font-size: 16px; color: #1e1b4b; font-weight: 600; margin-top: 2px; }
+        
+        /* 强制分页的图表容器 */
+        .chart-container.force-page-break { page-break-before: always; break-before: page; }
         
         /* 新增：iText兼容的饼图卡片样式 */
         .pie-chart-card {
@@ -128,13 +131,13 @@
             .cover-background, .cover-pattern, .cover-gradient { display: none !important; }
             .toc-page { height: 100vh !important; page-break-after: always !important; }
             .content-page { page-break-before: always; }
-            .chart-container { page-break-inside: avoid; }
+            .chart-container { page-break-inside: avoid !important; break-inside: avoid !important; }
+            .chart-container.force-page-break { page-break-before: always !important; break-before: page !important; }
             
-            /* 折线图打印样式 - 防止跑偏 */
-            .trend-chart { position: relative !important; overflow: visible !important; page-break-inside: avoid !important; }
+            /* 折线图打印样式 - 防止跑偏和分页截断 */
+            .trend-chart { position: relative !important; overflow: visible !important; page-break-inside: avoid !important; break-inside: avoid !important; page-break-before: auto !important; page-break-after: auto !important; }
             .trend-chart, .trend-svg { overflow: visible !important; }
-            .trend-svg { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; max-width: 100% !important; height: auto !important; }
-            .trend-svg svg { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; max-width: 100% !important; height: auto !important; }
+            .trend-svg { position: relative !important; overflow: visible !important; }
             .trend-lines { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; }
             .trend-point { position: relative !important; left: 0 !important; top: 0 !important; transform: none !important; }
         }
@@ -353,10 +356,10 @@
                         <span>累计开放设备数量</span>
                 </div>
                 </div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
@@ -366,18 +369,18 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">2000</text>
                     
                     <!-- X轴标签 -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                     
                     <!-- 开放设备数线 - 平滑曲线 -->
                     <path d="M 60,200 Q 89,198 118,196 Q 147,193 176,190 Q 205,187 234,184 Q 263,182 292,180 Q 321,178 350,176 Q 379,174 408,172 Q 437,170 466,168 Q 495,166 524,164 Q 553,162 582,160 Q 611,164 640,168 Q 669,170 698,172" 
@@ -401,8 +404,53 @@
         </div>
 
         <!-- 开放对象分布 -->
-        
-
+        <div class="chart-container">
+            <h3 class="chart-title">开放对象分布</h3>
+            <div class="pie-charts-container">
+                <div class="pie-chart-wrapper">
+                    <h4 class="pie-chart-title">按用户类型分布</h4>
+                    <div class="pie-chart">
+                        <!-- 开放对象分布 80% / 20% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="80/20 pie">
+                            <!-- 底层整圈：校外用户（橙色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f59e0b" stroke-width="20"/>
+                          
+                            <!-- 上层弧：校内用户 80%（紫色） -->
+                            <polyline fill="none" stroke="#7c3aed" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                              " />
+                          
+                            <!-- 中空甜甜圈 -->
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #7c3aed;"></div>
+                                <div class="legend-text">
+                                    <span class="legend-label">校内用户</span>
+                                    <span class="legend-value">80%</span>
+                                </div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #f59e0b;"></div>
+                                <div class="legend-text">
+                                    <span class="legend-label">校外用户</span>
+                                    <span class="legend-value">20%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            
     <!-- 第3章：设备分布情况分析 -->
     <div class="page content-page">
         <h2 class="section-title">3. 设备分布情况分析</h2>
@@ -652,12 +700,12 @@
                     <div class="legend-item">
                         <div class="legend-color" style="background: #1e40af;"></div>
                         <span>上机预约次数</span>
-    </div>
-</div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
+                    </div>
+                </div>
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
@@ -667,18 +715,18 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
                     
                     <!-- X轴标签 -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                     
                     <!-- 上机预约次数线 - 平滑曲线 -->
                     <path d="M 60,200 Q 89,198 118,196 Q 147,193 176,190 Q 205,187 234,184 Q 263,182 292,180 Q 321,178 350,176 Q 379,174 408,172 Q 437,170 466,168 Q 495,166 524,164 Q 553,162 582,160 Q 611,164 640,168 Q 669,170 698,172" 
@@ -703,19 +751,19 @@
         </div>
 
         <!-- 上机预约使用时长趋势变化 -->
-    <div class="chart-container">
+        <div class="chart-container">
             <h3 class="chart-title">上机预约使用时长趋势变化</h3>
-        <div class="trend-chart">
+            <div class="trend-chart">
                 <div class="chart-legend">
                     <div class="legend-item">
                         <div class="legend-color" style="background: #0ea5e9;"></div>
                         <span>上机预约使用时长</span>
                     </div>
                 </div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
-                <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
@@ -725,21 +773,21 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">4000</text>
                     
                     <!-- X轴标签 -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                     
                     <!-- 上机预约使用时长线 - 平滑曲线 -->
-                    <path d="M 60,220 Q 89,215 118,210 Q 147,205 176,200 Q 205,195 234,190 Q 263,185 292,180 Q 321,175 350,170 Q 379,165 408,160 Q 437,155 466,150 Q 495,145 524,140 Q 553,135 582,130 Q 611,125 640,120 Q 669,115 698,110" 
+                    <path d="M 60,220 L 118,210 L 176,200 L 234,190 L 292,180 L 350,170 L 408,160 L 466,150 L 524,160 L 582,180 L 640,190 L 698,200" 
                           fill="none" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
                     
                     <!-- 上机预约使用时长数据点 -->
@@ -769,12 +817,12 @@
                         <span>设备预约次数</span>
                     </div>
                 </div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                 
-                <!-- Y轴标签 -->
+                    <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
                     <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">100</text>
                     <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">200</text>
@@ -782,18 +830,18 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">400</text>
 
                     <!-- X轴标签（每2小时一个间隔，共12个，格式为2:00、4:00等） -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">0:00</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2:00</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">4:00</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">6:00</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">8:00</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">10:00</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">12:00</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">14:00</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">16:00</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">18:00</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">20:00</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">22:00</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">0:00</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2:00</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">4:00</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">6:00</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">8:00</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">10:00</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">12:00</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">14:00</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">16:00</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">18:00</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">20:00</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">22:00</text>
 
                     <!-- 设备预约次数线 - 平滑曲线（示例数据） -->
                     <path d="M 60,230 Q 89,220 118,210 Q 147,200 176,180 Q 205,160 234,140 Q 263,120 292,110 Q 321,100 350,110 Q 379,120 408,140 Q 437,160 466,180 Q 495,200 524,210 Q 553,220 582,230 Q 611,240 640,245 Q 669,248 698,250"
@@ -1037,19 +1085,19 @@
                 </div>
 
         <!-- 送样检测次数趋势变化 -->
-        <div class="chart-container">
+        <div class="chart-container force-page-break">
             <h3 class="chart-title">送样检测次数趋势变化</h3>
             <div class="trend-chart">
                 <div class="chart-legend">
                     <div class="legend-item">
                         <div class="legend-color" style="background: #7c3aed;"></div>
                         <span>送样检测次数</span>
+                    </div>
                 </div>
-            </div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
@@ -1059,18 +1107,18 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
                     
                     <!-- X轴标签 -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                     
                     <!-- 送样检测次数线 - 平滑曲线 -->
                     <path d="M 60,180 Q 89,178 118,176 Q 147,173 176,170 Q 205,167 234,164 Q 263,162 292,160 Q 321,158 350,156 Q 379,154 408,152 Q 437,150 466,148 Q 495,146 524,144 Q 553,142 582,140 Q 611,144 640,148 Q 669,150 698,152" 
@@ -1309,19 +1357,19 @@
     </div>
 
         <!-- 设备使用量趋势变化 -->
-    <div class="chart-container">
+        <div class="chart-container">
             <h3 class="chart-title">设备使用量趋势变化</h3>
             <div class="trend-chart">
                 <div class="chart-legend">
                     <div class="legend-item">
                         <div class="legend-color" style="background: #0ea5e9;"></div>
                         <span>使用总时长(小时)</span>
+                    </div>
                 </div>
-            </div>
-                <svg class="trend-svg" viewBox="0 0 800 300">
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
                     <!-- 坐标轴 -->
-                    <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                    <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
                     
                     <!-- Y轴标签 -->
                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
@@ -1331,18 +1379,18 @@
                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">8000</text>
                     
                     <!-- X轴标签 -->
-                    <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                    <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                    <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                    <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                    <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                    <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                    <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                    <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                    <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                    <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                    <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                    <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                     
                     <!-- 总使用时长线 - 平滑曲线 -->
                     <path d="M 60,160 Q 89,158 118,156 Q 147,153 176,150 Q 205,147 234,144 Q 263,142 292,140 Q 321,138 350,136 Q 379,134 408,132 Q 437,130 466,128 Q 495,126 524,124 Q 553,122 582,120 Q 611,124 640,128 Q 669,130 698,132" 
@@ -1660,8 +1708,8 @@
         </table>
     </div>
 
-         <!-- 收入趋势变化 -->
-    <div class="chart-container">
+                 <!-- 收入趋势变化 -->
+        <div class="chart-container force-page-break">
              <h3 class="chart-title">收入趋势变化</h3>
              <div class="trend-chart">
                  <div class="chart-legend">
@@ -1678,31 +1726,31 @@
                          <span>校外收入</span>
             </div>
                 </div>
-                 <svg class="trend-svg" viewBox="0 0 800 300">
-                <!-- 坐标轴 -->
-                     <line x1="60" y1="250" x2="740" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                     <line x1="60" y1="50" x2="60" y2="250" stroke="#e2e8f0" stroke-width="2"/>
-                     
-                     <!-- Y轴标签 -->
-                     <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
-                     <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">50</text>
-                     <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">100</text>
-                     <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">150</text>
-                     <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">200</text>
-                     
-                     <!-- X轴标签 -->
-                     <text x="60" y="270" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
-                     <text x="118" y="270" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
-                     <text x="176" y="270" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
-                     <text x="234" y="270" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
-                     <text x="292" y="270" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
-                     <text x="350" y="270" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
-                     <text x="408" y="270" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
-                     <text x="466" y="270" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
-                     <text x="524" y="270" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
-                     <text x="582" y="270" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
-                     <text x="640" y="270" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
-                     <text x="698" y="270" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
+                <svg width="640" height="320" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" class="trend-svg">
+                    <!-- 坐标轴 -->
+                    <line x1="60" y1="280" x2="740" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="280" stroke="#e2e8f0" stroke-width="2"/>
+                    
+                    <!-- Y轴标签 -->
+                    <text x="40" y="255" text-anchor="middle" font-size="12" fill="#64748b">0</text>
+                    <text x="40" y="205" text-anchor="middle" font-size="12" fill="#64748b">50</text>
+                    <text x="40" y="155" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+                    <text x="40" y="105" text-anchor="middle" font-size="12" fill="#64748b">150</text>
+                    <text x="40" y="55" text-anchor="middle" font-size="12" fill="#64748b">200</text>
+                    
+                    <!-- X轴标签 -->
+                    <text x="60" y="290" text-anchor="middle" font-size="12" fill="#64748b">1月</text>
+                    <text x="118" y="290" text-anchor="middle" font-size="12" fill="#64748b">2月</text>
+                    <text x="176" y="290" text-anchor="middle" font-size="12" fill="#64748b">3月</text>
+                    <text x="234" y="290" text-anchor="middle" font-size="12" fill="#64748b">4月</text>
+                    <text x="292" y="290" text-anchor="middle" font-size="12" fill="#64748b">5月</text>
+                    <text x="350" y="290" text-anchor="middle" font-size="12" fill="#64748b">6月</text>
+                    <text x="408" y="290" text-anchor="middle" font-size="12" fill="#64748b">7月</text>
+                    <text x="466" y="290" text-anchor="middle" font-size="12" fill="#64748b">8月</text>
+                    <text x="524" y="290" text-anchor="middle" font-size="12" fill="#64748b">9月</text>
+                    <text x="582" y="290" text-anchor="middle" font-size="12" fill="#64748b">10月</text>
+                    <text x="640" y="290" text-anchor="middle" font-size="12" fill="#64748b">11月</text>
+                    <text x="698" y="290" text-anchor="middle" font-size="12" fill="#64748b">12月</text>
                      
                      <!-- 总收入线 - 平滑曲线 -->
                      <path d="M 60,180 Q 89,175 118,170 Q 147,165 176,160 Q 205,155 234,150 Q 263,145 292,140 Q 321,135 350,130 Q 379,125 408,120 Q 437,115 466,110 Q 495,105 524,100 Q 553,95 582,90 Q 611,85 640,80 Q 669,75 698,70" 
