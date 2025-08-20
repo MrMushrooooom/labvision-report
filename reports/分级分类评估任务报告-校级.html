@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>分级分类评估任务报告（校级）</title>
+    <style>
+        @page { size: A4; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "PingFang SC", "Microsoft YaHei", "SimSun", Arial, sans-serif; color: #1f2937; font-size: 14px; line-height: 1.6; }
+
+        /* 页面结构 */
+        .page { page-break-after: always; min-height: 100vh; padding: 2cm; background: #ffffff; width: 100%; max-width: 100%; box-sizing: border-box; }
+        .content-page { background: white; }
+        .section-title { font-size: 24px; font-weight: bold; color: #1e1b4b; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #4338ca; }
+
+        /* 封面页 - 固定A4高度，深蓝色背景 */
+        .cover-page { height: 297mm; padding: 20mm; background: #0a0f1a; color: #fff; text-align: center; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden; }
+        .cover-header { position: relative; z-index: 2; width: 100%; text-align: left; margin-bottom: 0; padding-top: 20px; padding-left: 2.5cm; }
+        .brand-section { padding: 25px 30px; text-align: left; }
+        .brand-name { font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.9); letter-spacing: 2px; margin-bottom: 8px; }
+        .brand-english { font-size: 16px; font-weight: 300; color: rgba(255, 255, 255, 0.6); letter-spacing: 3px; font-family: "Arial", sans-serif; }
+        .cover-main { position: relative; z-index: 2; margin: 0; padding: 2cm; width: 100%; text-align: center; height: 60vh; }
+        .title-section { text-align: center; max-width: 100%; margin: 0 auto 30px auto; padding-top: 4vh; }
+        .cover-title { font-size: 64px; font-weight: 800; margin-bottom: 0; letter-spacing: 8px; color: #ffffff; position: relative; white-space: nowrap; text-align: center; width: 100%; }
+        .cover-title:last-of-type { margin-bottom: 25px; }
+        .cover-title:last-of-type::after { content: ''; position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); width: 120px; height: 3px; background: #60a5fa; border-radius: 2px; }
+        .cover-subtitle { font-size: 28px; margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: rgba(255, 255, 255, 0.8); font-family: "Arial", sans-serif; white-space: nowrap; }
+        .cover-divider { width: 140px; height: 2px; background: #60a5fa; margin-bottom: 20px; border-radius: 1px; }
+        .cover-description { font-size: 18px; font-weight: 300; line-height: 1.6; max-width: 100%; text-align: center; color: rgba(255, 255, 255, 0.65); letter-spacing: 1px; margin-bottom: 40px; }
+        .cover-footer { position: relative; z-index: 2; width: 100%; margin-top: 0; padding-bottom: 20px; padding-top: 2vh; }
+        .cover-info { text-align: center; max-width: 100%; margin: 0 auto; padding: 0 2cm; }
+        .info-row { text-align: center; margin-bottom: 25px; }
+        .info-row:last-child { margin-bottom: 0; }
+        .info-item { display: inline-block; text-align: center; min-width: 140px; margin: 0 30px; vertical-align: top; }
+        .info-label { color: rgba(255, 255, 255, 0.6); font-weight: 400; letter-spacing: 1px; font-size: 14px; margin-bottom: 8px; display: block; }
+        .info-value { color: rgba(255, 255, 255, 0.9); font-weight: 500; letter-spacing: 0.5px; font-size: 16px; }
+
+        /* 图表与容器 */
+        .chart-container { background: white; padding: 30px; border-radius: 12px; margin-bottom: 35px; border: 2px solid #e2e8f0; width: 100%; max-width: 100%; box-sizing: border-box; page-break-inside: avoid; break-inside: avoid; }
+        .chart-title { font-size: 20px; font-weight: 600; color: #1e1b4b; margin-bottom: 22px; text-align: center; padding: 14px 20px; background: #f8fafc; border-radius: 10px; border: 2px solid #e2e8f0; }
+
+        /* 数据表格 */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; }
+        .data-table th { background: #f1f5f9; font-weight: bold; color: #1e1b4b; }
+        .data-table tr:nth-child(even) { background: #f8fafc; }
+
+        /* 饼图（标准实现） */
+        .pie-charts-container { text-align: center; margin: 10px 0; padding: 30px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; }
+        .pie-chart-wrapper { text-align: center; width: 400px; padding: 30px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; display: inline-block; vertical-align: top; margin: 0 15px 20px 0; }
+        .pie-chart-title { font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 14px; padding: 8px 12px; background: #4338ca; border-radius: 8px; line-height: 1.3; }
+        .pie-chart { text-align: center; margin: 10px 0 6px; }
+        .pie-legend { margin-top: 8px; text-align: left; }
+
+
+        .pie-legend .legend-item { display: block; margin-bottom: 10px; }
+        .pie-legend .legend-color { width: 16px; height: 16px; border-radius: 3px; display: inline-block; margin-right: 10px; vertical-align: middle; border: 2px solid #e2e8f0; }
+        .pie-legend .legend-text { display: inline-block; vertical-align: middle; }
+        .pie-legend .legend-label { font-size: 13px; color: #374151; font-weight: 500; }
+        .pie-legend .legend-value { font-size: 14px; color: #1e1b4b; font-weight: 600; margin-left: 8px; }
+
+        /* 折线图样式 */
+        .trend-chart {
+            position: relative;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: visible !important;
+            clear: both;
+            display: block;
+            page-break-inside: avoid;
+        }
+        .trend-svg {
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            overflow: visible !important;
+        }
+        .chart-legend {
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .legend-item {
+            display: inline-block;
+            margin: 0 10px;
+            vertical-align: middle;
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid #e2e8f0;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* 目录页样式 */
+        .toc-page {
+            background: #ffffff;
+            padding: 1.5cm 2cm;
+            height: 100vh;
+            text-align: center;
+            page-break-after: always;
+        }
+        .toc-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e1b4b;
+            margin-bottom: 20px;
+        }
+        .toc-list {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: left;
+            padding-top: 10px;
+        }
+        .toc-item {
+            margin-bottom: 18px;
+            display: block;
+            text-align: left;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+        .toc-item:hover {
+            background: #f8fafc;
+            padding-left: 10px;
+            border-left: 3px solid #4338ca;
+        }
+        .toc-number {
+            display: inline-block;
+            width: 30px;
+            font-weight: 600;
+            color: #4338ca;
+            margin-right: 15px;
+        }
+        .toc-content {
+            color: #374151;
+            font-size: 16px;
+        }
+
+        @media print {
+            .cover-page { height: 297mm !important; padding: 20mm !important; background: #0a0f1a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden !important; }
+            .toc-page { height: 100vh !important; page-break-after: always !important; }
+            .content-page { page-break-before: always; }
+            .chart-container { page-break-inside: avoid !important; break-inside: avoid !important; }
+            .trend-chart { page-break-inside: avoid !important; overflow: visible !important; }
+            .trend-svg { position: relative !important; transform: none !important; max-width: 100% !important; height: 300px !important; }
+            * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+        }
+
+        /* 总结内容样式 */
+        .summary-content {
+            display: block;
+            text-align: left;
+        }
+        .summary-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .summary-item h4 {
+            color: #1e1b4b;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4338ca;
+        }
+        .summary-item ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .summary-item li {
+            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* 时间轴样式 */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #4338ca;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 80px;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: #4338ca;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 2;
+        }
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .timeline-content h4 {
+            color: #1e1b4b;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .timeline-content p {
+            color: #374151;
+            margin: 0;
+            line-height: 1.5;
+        }
+    </style>
+    </head>
+<body>
+    <!-- 封面页 -->
+    <div class="page cover-page">
+        <div class="cover-header">
+            <div class="brand-section">
+                <div class="brand-name">小来实验室</div>
+                <div class="brand-english">LabVision</div>
+            </div>
+        </div>
+        
+        <div class="cover-main">
+            <div class="title-section">
+                <h1 class="cover-title">分级分类评估任务</h1>
+                <h1 class="cover-title">报告</h1>
+                <h2 class="cover-subtitle">Risk Assessment Task Report</h2>
+                <div class="cover-divider"></div>
+                <p class="cover-description">清华大学实验室安全风险分级分类评估任务综合分析报告</p>
+            </div>
+        </div>
+        
+        <div class="cover-footer">
+            <div class="cover-info">
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">报告时间</span>
+                        <span class="info-value">2025年01月</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">报告类型</span>
+                        <span class="info-value">校级评估报告</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="info-label">生成系统</span>
+                        <span class="info-value">小来实验室</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">生成时间</span>
+                        <span class="info-value">2025年01月31日</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 目录页 -->
+    <div class="page toc-page">
+        <h1 class="toc-title">目录</h1>
+        <div class="toc-list">
+            <div class="toc-item">
+                <span class="toc-number">1</span>
+                <span class="toc-content">引言</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">2</span>
+                <span class="toc-content">分级分类评估任务概况</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">3</span>
+                <span class="toc-content">分级分类评估任务结果</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">4</span>
+                <span class="toc-content">风险等级评估细分结果</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">5</span>
+                <span class="toc-content">实验室类型评估细分结果</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">6</span>
+                <span class="toc-content">评估数据分析</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">7</span>
+                <span class="toc-content">总结</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-number">8</span>
+                <span class="toc-content">附录：数据说明</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引言 -->
+    <div class="page content-page">
+        <h2 class="section-title">引言</h2>
+        <div class="chart-container">
+            <p style="line-height: 1.8; color: #374151; text-align: justify;">
+                本报告基于2025年秋季评估风险评估任务数据自动生成，旨在系统呈现全校实验室安全风险评估的整体情况、关键发现与风险分布特征。报告对任务完成度、风险等级分布、实验室类型特点、高频风险条目及高风险实验室进行了多维度统计分析，为后续安全管理的精准施策、资源调配及重点监管提供客观依据。请各相关单位结合报告内容，针对性地开展风险隐患整改与预防工作。
+            </p>
+        </div>
+    </div>
+
+    <!-- 第1章：分级分类评估任务概况 -->
+    <div class="page content-page">
+        <h2 class="section-title">分级分类评估任务概况</h2>
+
+        <div class="chart-container">
+            <h3 class="chart-title">任务基本概况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>字段</th>
+                        <th>数值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>任务名称</td><td>2025年秋季评估</td></tr>
+                    <tr><td>任务目标</td><td>对指定范围内的实验室房间进行风险分级分类评估</td></tr>
+                    <tr><td>任务创建时间</td><td>2025-09-01</td></tr>
+                    <tr><td>任务截止日期</td><td>2025-12-31</td></tr>
+                    <tr><td>任务涉及院系</td><td>18个院系</td></tr>
+                    <tr><td>任务涉及楼宇</td><td>10个楼宇</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">评估目标信息</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>数值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>实验室总数</td><td>1,859个</td></tr>
+                    <tr><td>含房间数</td><td>2,516间</td></tr>
+                    <tr><td>涉及学院</td><td>18个</td></tr>
+                    <tr><td>总建筑面积</td><td>14,066㎡</td></tr>
+                    <tr><td>实验室/房间管理者人数</td><td>857人</td></tr>
+                    <tr><td>房间安全员人数</td><td>19人</td></tr>
+                    <tr><td>教师使用人数</td><td>1,211人</td></tr>
+                    <tr><td>学生使用人数</td><td>578人</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    <div class="chart-container">
+            <h3 class="chart-title">院系列表</h3>
+            <table class="data-table">
+                <tbody>
+                    <tr><td>化学系</td><td>生物系</td><td>物理系</td><td>数学系</td></tr>
+                    <tr><td>机械系</td><td>电子系</td><td>计算机系</td><td>材料系</td></tr>
+                    <tr><td>土木系</td><td>环境系</td><td>建筑系</td><td>艺术系</td></tr>
+                    <tr><td>经管系</td><td>外语系</td><td>法学系</td><td>医学系</td></tr>
+                    <tr><td>教育系</td><td>体育系</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">楼宇列表</h3>
+            <table class="data-table">
+                <tbody>
+                    <tr><td>主教学楼</td><td>实验楼A</td><td>实验楼B</td><td>实验楼C</td></tr>
+                    <tr><td>图书馆</td><td>体育馆</td><td>学生宿舍</td><td>食堂</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 第2章：分级分类评估任务结果 -->
+    <div class="page content-page">
+        <h2 class="section-title">分级分类评估任务结果</h2>
+
+        <div class="chart-container">
+            <h3 class="chart-title">任务完成情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>数值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>完成评估实验室房间数量</td><td>1,857间</td></tr>
+                    <tr><td>评估但未审批实验室房间数量</td><td>1间</td></tr>
+                    <tr><td>没有开展评估实验室房间数量</td><td>1间</td></tr>
+                    <tr><td>整体完成率</td><td>99%</td></tr>
+                    <tr><td>完成率最高院系</td><td>化学系，100%</td></tr>
+                    <tr><td>完成率最低院系</td><td>土木系，50%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    <div class="chart-container">
+            <h3 class="chart-title">学院对比 (按完成率排名)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>所属单位</th>
+                        <th>房间数量</th>
+                        <th>完成评估房间数量</th>
+                        <th>完成率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>化学系</td><td>156</td><td>156</td><td>100%</td></tr>
+                    <tr><td>生物系</td><td>142</td><td>140</td><td>98.6%</td></tr>
+                    <tr><td>物理系</td><td>128</td><td>125</td><td>97.7%</td></tr>
+                    <tr><td>数学系</td><td>98</td><td>95</td><td>96.9%</td></tr>
+                    <tr><td>机械系</td><td>134</td><td>129</td><td>96.3%</td></tr>
+                    <tr><td>电子系</td><td>167</td><td>160</td><td>95.8%</td></tr>
+                    <tr><td>计算机系</td><td>189</td><td>180</td><td>95.2%</td></tr>
+                    <tr><td>材料系</td><td>145</td><td>137</td><td>94.5%</td></tr>
+                    <tr><td>土木系</td><td>178</td><td>89</td><td>50.0%</td></tr>
+                    <tr><td>环境系</td><td>123</td><td>115</td><td>93.5%</td></tr>
+                    <tr><td>建筑系</td><td>156</td><td>145</td><td>92.9%</td></tr>
+                    <tr><td>艺术系</td><td>89</td><td>82</td><td>92.1%</td></tr>
+                    <tr><td>经管系</td><td>134</td><td>123</td><td>91.8%</td></tr>
+                    <tr><td>外语系</td><td>78</td><td>71</td><td>91.0%</td></tr>
+                    <tr><td>法学系</td><td>67</td><td>60</td><td>89.6%</td></tr>
+                    <tr><td>医学系</td><td>198</td><td>176</td><td>88.9%</td></tr>
+                    <tr><td>教育系</td><td>89</td><td>78</td><td>87.6%</td></tr>
+                    <tr><td>体育系</td><td>45</td><td>39</td><td>86.7%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 双饼图展示评估完成情况 -->
+        <div class="chart-container">
+            <h3 class="chart-title">评估完成情况统计</h3>
+            <div class="pie-charts-container">
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">已完成 vs 未完成评估</div>
+                    <div class="pie-chart">
+                        <!-- 已完成 vs 未完成  82.8% / 17.2% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="82.8/17.2 pie">
+                            <!-- 底层整圈：未完成评估（橙色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f59e0b" stroke-width="20"/>
+                          
+                            <!-- 上层弧：已完成评估 82.8%（绿色）——用 polyline 近似圆弧 -->
+                            <polyline fill="none" stroke="#16a34a" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42 35.28,147.02
+                              " />
+                          
+                            <!-- 中空甜甜圈 -->
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+  
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #16a34a;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">已完成评估 (82.8%)</span>
+                                <span class="legend-value">2,412间</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">未完成评估 (17.2%)</span>
+                                <span class="legend-value">503间</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pie-chart-wrapper">
+                    <div class="pie-chart-title">已分级 vs 未分级</div>
+        <div class="pie-chart">
+                        <!-- 已分级 vs 未分级  80% / 20% -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" aria-label="80/20 pie">
+                            <!-- 底层整圈：未分级（灰色） -->
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#d1d5db" stroke-width="20"/>
+                          
+                            <!-- 上层弧：已分级 80%（蓝色） -->
+                            <polyline fill="none" stroke="#3b82f6" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+                              points="
+                                100,20 113.89,21.22 127.36,24.82 140,30.72 151.42,38.72 161.28,48.58
+                                169.28,60 175.18,72.64 178.78,86.11 180,100 178.78,113.89 175.18,127.36
+                                169.28,140 161.28,151.42 151.42,161.28 140,169.28 127.36,175.18 113.89,178.78
+                                100,180 86.11,178.78 72.64,175.18 60,169.28 48.58,161.28 38.72,151.42
+                                30.72,140 24.82,127.36 21.22,113.89 20,100 21.22,86.11 24.82,72.64
+                                30.72,60 38.72,48.58 48.58,38.72 60,30.72 65.94,27.61
+                              " />
+                          
+                            <circle cx="100" cy="100" r="60" fill="white"/>
+                          </svg>
+                          
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">已分级 (80%)</span>
+                                <span class="legend-value">2,012间</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #d1d5db;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">未分级 (20%)</span>
+                                <span class="legend-value">503间</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">实验室风险等级情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>风险等级</th>
+                        <th>房间数量</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>I级重大风险</td><td>377</td><td>15%</td></tr>
+                    <tr><td>II级高风险</td><td>503</td><td>20%</td></tr>
+                    <tr><td>III级中风险</td><td>629</td><td>25%</td></tr>
+                    <tr><td>IV级低风险</td><td>503</td><td>20%</td></tr>
+                    <tr><td>未分级</td><td>503</td><td>20%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="chart-container">
+            <h3 class="chart-title">实验室类型分布情况</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>实验室类型</th>
+                        <th>房间数量</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>化学类实验室</td><td>452</td><td>18%</td></tr>
+                    <tr><td>生物类实验室</td><td>377</td><td>15%</td></tr>
+                    <tr><td>辐射类实验室</td><td>302</td><td>12%</td></tr>
+                    <tr><td>机电类实验室</td><td>503</td><td>20%</td></tr>
+                    <tr><td>其他类实验室</td><td>377</td><td>15%</td></tr>
+                    <tr><td>未分类</td><td>503</td><td>20%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+
+    <!-- 第3章：风险等级评估细分结果 -->
+    <div class="page content-page">
+        <h2 class="section-title">风险等级评估细分结果</h2>
+
+        <div class="chart-container">
+            <h3 class="chart-title">各院系风险等级数量分布（按照I级风险实验室数量排名）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>院系名称</th>
+                        <th>I级</th>
+                        <th>II级</th>
+                        <th>III级</th>
+                        <th>IV级</th>
+                        <th>未分级</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>院系1</td><td>8</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>院系2</td><td>7</td><td>7</td><td>7</td><td>7</td><td>0</td></tr>
+        <tr><td>院系3</td><td>4</td><td>4</td><td>4</td><td>4</td><td>0</td></tr>
+        <tr><td>院系4</td><td>2</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>院系5</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="chart-container">
+            <h3 class="chart-title">各院系风险等级比例分布（按照I级风险实验室占比排名）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>院系名称</th>
+                        <th>I级</th>
+                        <th>II级</th>
+                        <th>III级</th>
+                        <th>IV级</th>
+                        <th>未分级</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>院系1</td><td>20%</td><td>10%</td><td>10%</td><td>10%</td><td>0</td></tr>
+        <tr><td>院系2</td><td>18%</td><td>30%</td><td>30%</td><td>30%</td><td>0</td></tr>
+        <tr><td>院系3</td><td>17%</td><td>17%</td><td>17%</td><td>17%</td><td>0</td></tr>
+        <tr><td>院系4</td><td>16%</td><td>50%</td><td>50%</td><td>50%</td><td>0</td></tr>
+        <tr><td>院系5</td><td>5%</td><td>60%</td><td>60%</td><td>60%</td><td>1%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="chart-container">
+            <h3 class="chart-title">各楼宇风险等级数量分布（按照楼宇的I级实验室数量排名）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>楼宇名称</th>
+                        <th>I级</th>
+                        <th>II级</th>
+                        <th>III级</th>
+                        <th>IV级</th>
+                        <th>未分级</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>楼宇1</td><td>8</td><td>5</td><td>5</td><td>5</td><td>5</td></tr>
+        <tr><td>楼宇2</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td></tr>
+        <tr><td>楼宇3</td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+        <tr><td>楼宇4</td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+        <tr><td>楼宇5</td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 第4章：实验室类型评估细分结果 -->
+    <div class="page content-page">
+        <h2 class="section-title">实验室类型评估细分结果</h2>
+
+        <div class="chart-container">
+            <h3 class="chart-title">各院系实验室类型数量分布（按照院系实验室数量排名）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>院系名称</th>
+                        <th>化学类实验室</th>
+                        <th>生物类实验室</th>
+                        <th>辐射类实验室</th>
+                        <th>机电类实验室</th>
+                        <th>其他类实验室</th>
+                        <th>未分类</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>院系1</td><td>8</td><td>5</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>院系2</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>0</td></tr>
+        <tr><td>院系3</td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td><td>0</td></tr>
+        <tr><td>院系4</td><td>2</td><td>5</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>院系5</td><td>0</td><td>0</td><td>0</td><td>10</td><td>1</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="chart-container">
+            <h3 class="chart-title">各楼宇实验室类型数量分布（按照楼宇实验室数量排名）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>楼宇名称</th>
+                        <th>化学类实验室</th>
+                        <th>生物类实验室</th>
+                        <th>辐射类实验室</th>
+                        <th>机电类实验室</th>
+                        <th>其他类实验室</th>
+                        <th>未分类</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>楼宇1</td><td>8</td><td>5</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>楼宇2</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>0</td></tr>
+        <tr><td>楼宇3</td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td><td>0</td></tr>
+        <tr><td>楼宇4</td><td>2</td><td>5</td><td>5</td><td>5</td><td>5</td><td>0</td></tr>
+        <tr><td>楼宇5</td><td>0</td><td>0</td><td>0</td><td>10</td><td>1</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <!-- 第5章：评估数据分析 -->
+    <div class="page content-page">
+        <h2 class="section-title">评估数据分析</h2>
+
+        <div class="chart-container">
+            <h3 class="chart-title">被勾选最多的条目</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>风险等级</th>
+                        <th>条目内容</th>
+                        <th>数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>I级实验室条目</td><td>实验原料含剧毒化学成分</td><td>3次</td></tr>
+        <tr><td>I级实验室条目</td><td>实验原料XXXXXXX</td><td>4次</td></tr>
+        <tr><td>I级实验室条目</td><td>实验原料XXXXXXX</td><td>4次</td></tr>
+        <tr><td>I级实验室条目</td><td>实验原料XXXXXXX</td><td>4次</td></tr>
+        <tr><td>安全风险评分条目</td><td>实验原料XXXXXXX</td><td>5次</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">高风险评分实验室（前20间）</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>实验室</th>
+                        <th>所属院系</th>
+                        <th>风险评分</th>
+                        <th>风险等级</th>
+                        <th>实验室类型</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>XX楼xx房间1</td><td>化学系</td><td>100</td><td>I级</td><td>化学</td></tr>
+        <tr><td>XX楼xx房间1</td><td>化学系</td><td>100</td><td>I级</td><td>化学</td></tr>
+        <tr><td>XX楼xx房间1</td><td>化学系</td><td>80</td><td>I级</td><td>化学</td></tr>
+        <tr><td>XX楼xx房间1</td><td>生物系</td><td>80</td><td>I级</td><td>生物</td></tr>
+        <tr><td>XX楼xx房间20</td><td>生物系</td><td>60</td><td>I级</td><td>生物</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">历史对比分析</h3>
+            <p style="line-height: 1.6; color: #374151; margin-bottom: 20px;">注：默认与全校的数据对比，对比范围可能和本次任务的覆盖范围不尽相同。因此对比数据仅供参考。</p>
+            
+            <h4 style="color: #1e1b4b; font-size: 18px; margin-bottom: 15px;">5.3.1 风险对比</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>本次</th>
+                        <th>上次</th>
+                        <th>增/减</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>I级重大风险房间数量</td><td>100</td><td>105</td><td>减</td></tr>
+        <tr><td>II级高风险房间数量</td><td>100</td><td>98</td><td>增</td></tr>
+        <tr><td>III级中风险房间数量</td><td>80</td><td>80</td><td>不变</td></tr>
+        <tr><td>IV级低风险房间数量</td><td>80</td><td>80</td><td>不变</td></tr>
+        <tr><td>未分类</td><td>60</td><td>60</td><td>不变</td></tr>
+                </tbody>
+            </table>
+
+            <h4 style="color: #1e1b4b; font-size: 18px; margin: 25px 0 15px 0;">5.3.2 类型对比</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>本次</th>
+                        <th>上次</th>
+                        <th>增/减</th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr><td>化学类实验室数量</td><td>100</td><td>105</td><td>减</td></tr>
+        <tr><td>生物类实验室数量</td><td>100</td><td>98</td><td>增</td></tr>
+        <tr><td>辐射类实验室</td><td>80</td><td>80</td><td>不变</td></tr>
+        <tr><td>机电类实验室</td><td>80</td><td>80</td><td>不变</td></tr>
+        <tr><td>其他类实验室</td><td>60</td><td>60</td><td>不变</td></tr>
+        <tr><td>未分类</td><td>60</td><td>60</td><td>不变</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 总结 -->
+    <div class="page content-page">
+        <h2 class="section-title">总结</h2>
+        <div class="chart-container">
+            <p style="line-height: 1.8; color: #374151; text-align: justify;">
+                本次2025年秋季评估风险评估任务已按计划基本完成，整体完成率达【99%】。评估覆盖全校【18】个院系【1,859】个实验室共【2,516】间房间。分析结果显示识别出I级重大风险实验室【5】间【0.20%】，II级高风险实验室【7】间【0.28%】，III级中风险实验室【7】间【0.28%】，IV级低风险实验室【7】间【0.28%】。
+            </p>
+        </div>
+    </div>
+
+    <!-- 附录：数据说明 -->
+    <div class="page content-page">
+        <h2 class="section-title">附录：数据说明</h2>
+        <div class="chart-container">
+            <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">本报告数据来源于平台内部，数据截止至2025年12月31日。</p>
+            <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">"未分级"包含未完成评估、评估未审批及评估结果为待定的房间。</p>
+            <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">"未分类"指未在系统中明确选择实验室类型的房间。</p>
+            <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">建筑面积统计基于平台内部维护的的实验室基础信息。</p>
+        </div>
+    </div>
+
+</body>
+</html>
+
